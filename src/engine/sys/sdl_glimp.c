@@ -1056,11 +1056,12 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder )
 		SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, tstencilbits );
 		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
-		if ( SDL_GL_SetAttribute( SDL_GL_SWAP_CONTROL, r_swapInterval->integer ) < 0 )
+#if !SDL_VERSION_ATLEAST(1, 3, 0)
+		if ( SDL_GL_SetAttribute( SDL_GL_SWAP_CONTROL r_swapInterval->integer ) < 0 )
 		{
 			ri.Printf( PRINT_ALL, "r_swapInterval requires libSDL >= 1.2.10\n" );
 		}
-
+#endif
 #ifdef USE_ICON
 		{
 			SDL_Surface *icon = SDL_CreateRGBSurfaceFrom( ( void * ) CLIENT_WINDOW_ICON.pixel_data,
@@ -1088,6 +1089,14 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder )
 			ri.Printf( PRINT_DEVELOPER, "SDL_SetVideoMode failed: %s\n", SDL_GetError() );
 			continue;
 		}
+
+#if !SDL_VERSION_ATLEAST(1, 3, 0)
+		// With SDL >=1.3, segfaults if called earlier
+		if ( SDL_GL_SetSwapInterval( ( v ) ) < 0 )
+		{
+			ri.Printf( PRINT_ALL, "r_swapInterval requires libSDL >= 1.2.10\n" );
+		}
+#endif
 
 		ri.Printf( PRINT_ALL, "Using %d/%d/%d Color bits, %d depth, %d stencil display.\n",
 		           sdlcolorbits, sdlcolorbits, sdlcolorbits, tdepthbits, tstencilbits );

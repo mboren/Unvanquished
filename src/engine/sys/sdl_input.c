@@ -449,12 +449,12 @@ static const char *IN_TranslateSDLToQ3Key( SDL_keysym *keysym,
 			case SDLK_LALT:
 				*key = K_ALT;
 				break;
-
+#if !SDL_VERSION_ATLEAST(1, 3, 0)
 			case SDLK_LSUPER:
 			case SDLK_RSUPER:
 				*key = K_SUPER;
 				break;
-
+#endif
 			case SDLK_KP5:
 				*key = K_KP_5;
 				break;
@@ -536,11 +536,12 @@ static const char *IN_TranslateSDLToQ3Key( SDL_keysym *keysym,
 				break;
 
 			default:
+#if !SDL_VERSION_ATLEAST(1, 3, 0) // FIXME?
 				if ( keysym->sym >= SDLK_WORLD_0 && keysym->sym <= SDLK_WORLD_95 )
 				{
 					*key = ( keysym->sym - SDLK_WORLD_0 ) + K_WORLD_0;
 				}
-
+#endif
 				break;
 		}
 	}
@@ -649,8 +650,13 @@ static void IN_GobbleMotionEvents( void )
 	// Gobble any mouse motion events
 	SDL_PumpEvents();
 
+#if SDL_VERSION_ATLEAST(1, 3, 0)
+	while ( SDL_PeepEvents( dummy, 1, SDL_GETEVENT,
+	                        SDL_MOUSEMOTION, SDL_MOUSEMOTION ) ) { }
+#else
 	while ( SDL_PeepEvents( dummy, 1, SDL_GETEVENT,
 	                        SDL_EVENTMASK( SDL_MOUSEMOTION ) ) ) { }
+#endif
 }
 
 /*

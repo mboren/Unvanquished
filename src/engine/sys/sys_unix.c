@@ -807,13 +807,13 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *t
 					switch ( type )
 					{
 						case DT_YES_NO:
-							return exitCode ? DR_NO : DR_YES;
+							return exitCode ? DIALOGUE_NO : DIALOGUE_YES;
 
 						case DT_OK_CANCEL:
-							return exitCode ? DR_CANCEL : DR_OK;
+							return exitCode ? DIALOGUE_CANCEL : DIALOGUE_OK;
 
 						default:
-							return DR_OK;
+							return DIALOGUE_OK;
 					}
 				}
 
@@ -840,7 +840,7 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *t
 	}
 
 	Com_DPrintf( S_COLOR_YELLOW "WARNING: failed to show a dialog\n" );
-	return DR_OK;
+	return DIALOGUE_OK;
 }
 
 #endif

@@ -683,7 +683,7 @@ Display an error message
 void Sys_ErrorDialog( const char *error )
 {
 	if ( Sys_Dialog( DT_YES_NO, va( "%s. Copy console log to clipboard?", error ),
-	                 "Error" ) == DR_YES )
+	                 "Error" ) == DIALOGUE_YES )
 	{
 		HGLOBAL memoryHandle;
 		char    *clipMemory;
@@ -755,16 +755,16 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *t
 	{
 		default:
 		case IDOK:
-			return DR_OK;
+			return DIALOGUE_OK;
 
 		case IDCANCEL:
-			return DR_CANCEL;
+			return DIALOGUE_CANCEL;
 
 		case IDYES:
-			return DR_YES;
+			return DIALOGUE_YES;
 
 		case IDNO:
-			return DR_NO;
+			return DIALOGUE_NO;
 	}
 }
 

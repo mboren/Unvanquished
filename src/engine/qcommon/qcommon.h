@@ -1383,10 +1383,10 @@ void         Sys_SetEnv( const char *name, const char *value );
 
 typedef enum
 {
-  DR_YES = 0,
-  DR_NO = 1,
-  DR_OK = 0,
-  DR_CANCEL = 1
+  DIALOGUE_YES = 0,
+  DIALOGUE_NO = 1,
+  DIALOGUE_OK = 0,
+  DIALOGUE_CANCEL = 1
 } dialogResult_t;
 
 typedef enum

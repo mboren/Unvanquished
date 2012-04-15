@@ -103,7 +103,7 @@ Display an OS X dialog box
 */
 dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *title )
 {
-	dialogResult_t result = DR_OK;
+	dialogResult_t result = DIALOGUE_OK;
 	NSAlert *alert = [NSAlert new];
 
 	[alert setMessageText: [NSString stringWithUTF8String: title]];
@@ -118,7 +118,7 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *t
 	{
 		default:
 			[alert runModal];
-			result = DR_OK;
+			result = DIALOGUE_OK;
 			break;
 
 		case DT_YES_NO:
@@ -127,8 +127,8 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *t
 			switch( [alert runModal] )
 			{
 				default:
-				case NSAlertFirstButtonReturn: result = DR_YES; break;
-				case NSAlertSecondButtonReturn: result = DR_NO; break;
+				case NSAlertFirstButtonReturn: result = DIALOGUE_YES; break;
+				case NSAlertSecondButtonReturn: result = DIALOGUE_NO; break;
 			}
 			break;
 
@@ -139,8 +139,8 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char *message, const char *t
 			switch( [alert runModal] )
 			{
 				default:
-				case NSAlertFirstButtonReturn: result = DR_OK; break;
-				case NSAlertSecondButtonReturn: result = DR_CANCEL; break;
+				case NSAlertFirstButtonReturn: result = DIALOGUE_OK; break;
+				case NSAlertSecondButtonReturn: result = DIALOGUE_CANCEL; break;
 			}
 			break;
 	}

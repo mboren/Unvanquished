@@ -914,12 +914,12 @@ static void CG_Lev2ZapChain( centity_t *cent )
 	int           i;
 	entityState_t *es;
 	centity_t     *source = NULL, *target = NULL;
-	int           entityNums[ LEVEL2_AREAZAP_MAX_TARGETS + 1 ];
+	int           entityNums[ MARAUDER_AREAZAP_MAX_TARGETS + 1 ];
 	int           count;
 
 	es = &cent->currentState;
 
-	count = BG_UnpackEntityNumbers( es, entityNums, LEVEL2_AREAZAP_MAX_TARGETS + 1 );
+	count = BG_UnpackEntityNumbers( es, entityNums, MARAUDER_AREAZAP_MAX_TARGETS + 1 );
 
 	for ( i = 1; i < count; i++ )
 	{
@@ -1188,7 +1188,7 @@ static void CG_CEntityPVSLeave( centity_t *cent )
 	switch ( es->eType )
 	{
 		case ET_LEV2_ZAP_CHAIN:
-			for ( i = 0; i <= LEVEL2_AREAZAP_MAX_TARGETS; i++ )
+			for ( i = 0; i <= MARAUDER_AREAZAP_MAX_TARGETS; i++ )
 			{
 				if ( CG_IsTrailSystemValid( &cent->level2ZapTS[ i ] ) )
 				{

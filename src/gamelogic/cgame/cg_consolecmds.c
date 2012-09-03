@@ -211,7 +211,7 @@ static void CG_CompleteClass( void )
 
 	if ( cgs.clientinfo[ cg.clientNum ].team == TEAM_ALIENS )
 	{
-		for ( i = PCL_ALIEN_BUILDER0; i < PCL_HUMAN; i++ )
+		for ( i = PCL_ALIEN_GRANGER; i < PCL_HUMAN; i++ )
 		{
 			trap_CompleteCallback( BG_Class( i )->name );
 		}

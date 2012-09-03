@@ -332,7 +332,7 @@ void ClientImpacts( gentity_t *ent, pmove_t *pm )
 		}
 
 		// tyrant impact attacks
-		if ( ent->client->ps.weapon == WP_ALEVEL4 )
+		if ( ent->client->ps.weapon == WP_TYRANT )
 		{
 			G_ChargeAttack( ent, other );
 			G_CrushAttack( ent, other );
@@ -951,13 +951,13 @@ void ClientTimerActions( gentity_t *ent, int msec )
 		// Give score to basis that healed other aliens
 		if ( ent->client->pers.hasHealed )
 		{
-			if ( client->ps.weapon == WP_ALEVEL1 )
+			if ( client->ps.weapon == WP_BASILISK )
 			{
-				AddScore( ent, LEVEL1_REGEN_SCOREINC );
+				AddScore( ent, BASILISK_REGEN_SCOREINC );
 			}
-			else if ( client->ps.weapon == WP_ALEVEL1_UPG )
+			else if ( client->ps.weapon == WP_BASILISK_UPG )
 			{
-				AddScore( ent, LEVEL1_UPG_REGEN_SCOREINC );
+				AddScore( ent, BASILISK_UPG_REGEN_SCOREINC );
 			}
 
 			ent->client->pers.hasHealed = qfalse;
@@ -965,11 +965,11 @@ void ClientTimerActions( gentity_t *ent, int msec )
 	}
 
 	// Regenerate Adv. Dragoon barbs
-	if ( client->ps.weapon == WP_ALEVEL3_UPG )
+	if ( client->ps.weapon == WP_DRAGOON_UPG )
 	{
-		if ( client->ps.Ammo < BG_Weapon( WP_ALEVEL3_UPG )->maxAmmo )
+		if ( client->ps.Ammo < BG_Weapon( WP_DRAGOON_UPG )->maxAmmo )
 		{
-			if ( ent->timestamp + LEVEL3_BOUNCEBALL_REGEN < level.time )
+			if ( ent->timestamp + DRAGOON_BOUNCEBALL_REGEN < level.time )
 			{
 				client->ps.Ammo++;
 				ent->timestamp = level.time;
@@ -1646,7 +1646,7 @@ void ClientThink_real( gentity_t *ent )
 	}
 
 	if ( ( client->ps.stats[ STAT_STATE ] & SS_SLOWLOCKED ) &&
-	     client->lastSlowTime + ABUILDER_BLOB_TIME < level.time )
+	     client->lastSlowTime + GRANGER_BLOB_TIME < level.time )
 	{
 		client->ps.stats[ STAT_STATE ] &= ~SS_SLOWLOCKED;
 	}
@@ -1766,15 +1766,15 @@ void ClientThink_real( gentity_t *ent )
 					class_t  class = boost->client->ps.stats[ STAT_CLASS ];
 					qboolean didBoost = qfalse;
 
-					if ( class == PCL_ALIEN_LEVEL1 && modifier < LEVEL1_REGEN_MOD )
+					if ( class == PCL_ALIEN_BASILISK && modifier < BASILISK_REGEN_MOD )
 					{
-						modifier = LEVEL1_REGEN_MOD;
+						modifier = BASILISK_REGEN_MOD;
 						didBoost = qtrue;
 					}
-					else if ( class == PCL_ALIEN_LEVEL1_UPG &&
-					          modifier < LEVEL1_UPG_REGEN_MOD )
+					else if ( class == PCL_ALIEN_BASILISK_UPG &&
+					          modifier < BASILISK_UPG_REGEN_MOD )
 					{
-						modifier = LEVEL1_UPG_REGEN_MOD;
+						modifier = BASILISK_UPG_REGEN_MOD;
 						didBoost = qtrue;
 					}
 
@@ -1935,7 +1935,7 @@ void ClientThink_real( gentity_t *ent )
 
 	switch ( client->ps.weapon )
 	{
-		case WP_ALEVEL0:
+		case WP_DRETCH:
 			if ( !CheckVenomAttack( ent ) )
 			{
 				client->ps.weaponstate = WEAPON_READY;
@@ -1948,13 +1948,13 @@ void ClientThink_real( gentity_t *ent )
 
 			break;
 
-		case WP_ALEVEL1:
-		case WP_ALEVEL1_UPG:
+		case WP_BASILISK:
+		case WP_BASILISK_UPG:
 			CheckGrabAttack( ent );
 			break;
 
-		case WP_ALEVEL3:
-		case WP_ALEVEL3_UPG:
+		case WP_DRAGOON:
+		case WP_DRAGOON_UPG:
 			if ( !CheckPounceAttack( ent ) )
 			{
 				client->ps.weaponstate = WEAPON_READY;
@@ -1967,7 +1967,7 @@ void ClientThink_real( gentity_t *ent )
 
 			break;
 
-		case WP_ALEVEL4:
+		case WP_TYRANT:
 
 			// If not currently in a trample, reset the trample bookkeeping data
 			if ( !( client->ps.pm_flags & PMF_CHARGE ) && client->trampleBuildablesHitPos )

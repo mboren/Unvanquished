@@ -961,9 +961,9 @@ typedef struct zap_s
 	qboolean  used;
 
 	gentity_t *creator;
-	gentity_t *targets[ LEVEL2_AREAZAP_MAX_TARGETS ];
+	gentity_t *targets[ MARAUDER_AREAZAP_MAX_TARGETS ];
 	int       numTargets;
-	float     distances[ LEVEL2_AREAZAP_MAX_TARGETS ];
+	float     distances[ MARAUDER_AREAZAP_MAX_TARGETS ];
 
 	int       timeToLive;
 

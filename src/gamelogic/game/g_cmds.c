@@ -594,7 +594,7 @@ void Cmd_Give_f( gentity_t *ent )
 	{
 		gclient_t *client = ent->client;
 
-		if ( client->ps.weapon != WP_ALEVEL3_UPG &&
+		if ( client->ps.weapon != WP_DRAGOON_UPG &&
 		     BG_Weapon( client->ps.weapon )->infiniteAmmo )
 		{
 			return;
@@ -2271,9 +2271,9 @@ void Cmd_Class_f( gentity_t *ent )
 
 		if ( ent->client->pers.teamSelection == TEAM_ALIENS )
 		{
-			if ( newClass != PCL_ALIEN_BUILDER0 &&
-			     newClass != PCL_ALIEN_BUILDER0_UPG &&
-			     newClass != PCL_ALIEN_LEVEL0 )
+			if ( newClass != PCL_ALIEN_GRANGER &&
+			     newClass != PCL_ALIEN_GRANGER_UPG &&
+			     newClass != PCL_ALIEN_DRETCH )
 			{
 				G_TriggerMenuArgs( ent->client->ps.clientNum, MN_A_CLASSNOTSPAWN, newClass );
 				return;
@@ -2380,8 +2380,8 @@ void Cmd_Class_f( gentity_t *ent )
 			}
 
 			if ( ent->client->sess.spectatorState == SPECTATOR_NOT &&
-			     ( currentClass == PCL_ALIEN_BUILDER0 ||
-			       currentClass == PCL_ALIEN_BUILDER0_UPG ) &&
+			     ( currentClass == PCL_ALIEN_GRANGER ||
+			       currentClass == PCL_ALIEN_GRANGER_UPG ) &&
 			     ent->client->ps.stats[ STAT_MISC ] > 0 )
 			{
 				G_TriggerMenu( ent->client->ps.clientNum, MN_A_EVOLVEBUILDTIMER );

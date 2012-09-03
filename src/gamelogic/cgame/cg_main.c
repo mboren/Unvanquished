@@ -254,11 +254,11 @@ vmCvar_t        cg_highPolyBuildableModels;
 vmCvar_t        cg_highPolyWeaponModels;
 
 vmCvar_t        cg_fov_builder;
-vmCvar_t        cg_fov_level0;
-vmCvar_t        cg_fov_level1;
-vmCvar_t        cg_fov_level2;
-vmCvar_t        cg_fov_level3;
-vmCvar_t        cg_fov_level4;
+vmCvar_t        cg_fov_dretch;
+vmCvar_t        cg_fov_basilisk;
+vmCvar_t        cg_fov_marauder;
+vmCvar_t        cg_fov_dragoon;
+vmCvar_t        cg_fov_tyrant;
 vmCvar_t        cg_fov_human;
 
 typedef struct
@@ -419,11 +419,11 @@ static const cvarTable_t cvarTable[] =
 	{ &cg_highPolyWeaponModels,        "cg_highPolyWeaponModels",        "1",            CVAR_ARCHIVE | CVAR_LATCH    },
 
 	{ &cg_fov_builder,                 "cg_fov_builder",                 "0",            CVAR_ARCHIVE                 },
-	{ &cg_fov_level0,                  "cg_fov_level0",                  "0",            CVAR_ARCHIVE                 },
-	{ &cg_fov_level1,                  "cg_fov_level1",                  "0",            CVAR_ARCHIVE                 },
-	{ &cg_fov_level2,                  "cg_fov_level2",                  "0",            CVAR_ARCHIVE                 },
-	{ &cg_fov_level3,                  "cg_fov_level3",                  "0",            CVAR_ARCHIVE                 },
-	{ &cg_fov_level4,                  "cg_fov_level4",                  "0",            CVAR_ARCHIVE                 },
+	{ &cg_fov_dretch,                  "cg_fov_dretch",                  "0",            CVAR_ARCHIVE                 },
+	{ &cg_fov_basilisk,                  "cg_fov_basilisk",                  "0",            CVAR_ARCHIVE                 },
+	{ &cg_fov_marauder,                  "cg_fov_marauder",                  "0",            CVAR_ARCHIVE                 },
+	{ &cg_fov_dragoon,                  "cg_fov_dragoon",                  "0",            CVAR_ARCHIVE                 },
+	{ &cg_fov_tyrant,                  "cg_fov_tyrant",                  "0",            CVAR_ARCHIVE                 },
 	{ &cg_fov_human,                   "cg_fov_human",                   "0",            CVAR_ARCHIVE                 },
 };
 
@@ -522,43 +522,43 @@ static void CG_SetUIVars( void )
 
 	switch ( ps->stats[ STAT_CLASS ] )
 	{
-		case PCL_ALIEN_BUILDER0:
+		case PCL_ALIEN_GRANGER:
 			trap_Cvar_Set( "p_classname", "Builder" );
 			break;
 
-		case PCL_ALIEN_BUILDER0_UPG:
+		case PCL_ALIEN_GRANGER_UPG:
 			trap_Cvar_Set( "p_classname", "Advanced Builder" );
 			break;
 
-		case PCL_ALIEN_LEVEL0:
+		case PCL_ALIEN_DRETCH:
 			trap_Cvar_Set( "p_classname", "Dretch" );
 			break;
 
-		case PCL_ALIEN_LEVEL1:
+		case PCL_ALIEN_BASILISK:
 			trap_Cvar_Set( "p_classname", "Basilisk" );
 			break;
 
-		case PCL_ALIEN_LEVEL1_UPG:
+		case PCL_ALIEN_BASILISK_UPG:
 			trap_Cvar_Set( "p_classname", "Advanced Basilisk" );
 			break;
 
-		case PCL_ALIEN_LEVEL2:
+		case PCL_ALIEN_MARAUDER:
 			trap_Cvar_Set( "p_classname", "Marauder" );
 			break;
 
-		case PCL_ALIEN_LEVEL2_UPG:
+		case PCL_ALIEN_MARAUDER_UPG:
 			trap_Cvar_Set( "p_classname", "Advanced Marauder" );
 			break;
 
-		case PCL_ALIEN_LEVEL3:
+		case PCL_ALIEN_DRAGOON:
 			trap_Cvar_Set( "p_classname", "Dragoon" );
 			break;
 
-		case PCL_ALIEN_LEVEL3_UPG:
+		case PCL_ALIEN_DRAGOON_UPG:
 			trap_Cvar_Set( "p_classname", "Advanced Dragoon" );
 			break;
 
-		case PCL_ALIEN_LEVEL4:
+		case PCL_ALIEN_TYRANT:
 			trap_Cvar_Set( "p_classname", "Tyrant" );
 			break;
 
@@ -1987,9 +1987,9 @@ static const char *CG_FeederItemText( int feederID, int index, int column, qhand
 						switch ( sp->weapon )
 						{
 							case WP_ABUILD2:
-							case WP_ALEVEL1_UPG:
-							case WP_ALEVEL2_UPG:
-							case WP_ALEVEL3_UPG:
+							case WP_BASILISK_UPG:
+							case WP_MARAUDER_UPG:
+							case WP_DRAGOON_UPG:
 								*handle = cgs.media.upgradeClassIconShader;
 								break;
 

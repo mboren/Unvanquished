@@ -251,7 +251,7 @@ static void CG_AlienBuilderText( char *text, playerState_t *ps )
 		              CG_KeyNameForCommand( "+attack2" ) ) );
 	}
 
-	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_BUILDER0_UPG )
+	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_GRANGER_UPG )
 	{
 		Q_strcat( text, MAX_TUTORIAL_TEXT,
 		          va( "Press %s to launch a projectile\n",
@@ -292,7 +292,7 @@ static void CG_AlienLevel1Text( char *text, playerState_t *ps )
 	          va( "Press %s to swipe\n",
 	              CG_KeyNameForCommand( "+attack" ) ) );
 
-	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL1_UPG )
+	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_BASILISK_UPG )
 	{
 		Q_strcat( text, MAX_TUTORIAL_TEXT,
 		          va( "Press %s to spray poisonous gas\n",
@@ -315,7 +315,7 @@ static void CG_AlienLevel2Text( char *text, playerState_t *ps )
 	          va( "Press %s to bite\n",
 	              CG_KeyNameForCommand( "+attack" ) ) );
 
-	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL2_UPG )
+	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_MARAUDER_UPG )
 	{
 		Q_strcat( text, MAX_TUTORIAL_TEXT,
 		          va( "Press %s to invoke an electrical attack\n",
@@ -338,7 +338,7 @@ static void CG_AlienLevel3Text( char *text, playerState_t *ps )
 	          va( "Press %s to bite\n",
 	              CG_KeyNameForCommand( "+attack" ) ) );
 
-	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL3_UPG )
+	if ( ps->stats[ STAT_CLASS ] == PCL_ALIEN_DRAGOON_UPG )
 	{
 		Q_strcat( text, MAX_TUTORIAL_TEXT,
 		          va( "Press %s to launch a projectile\n",
@@ -652,31 +652,31 @@ const char *CG_TutorialText( void )
 		{
 			switch ( ps->stats[ STAT_CLASS ] )
 			{
-				case PCL_ALIEN_BUILDER0:
-				case PCL_ALIEN_BUILDER0_UPG:
+				case PCL_ALIEN_GRANGER:
+				case PCL_ALIEN_GRANGER_UPG:
 					CG_AlienBuilderText( text, ps );
 					break;
 
-				case PCL_ALIEN_LEVEL0:
+				case PCL_ALIEN_DRETCH:
 					CG_AlienLevel0Text( text, ps );
 					break;
 
-				case PCL_ALIEN_LEVEL1:
-				case PCL_ALIEN_LEVEL1_UPG:
+				case PCL_ALIEN_BASILISK:
+				case PCL_ALIEN_BASILISK_UPG:
 					CG_AlienLevel1Text( text, ps );
 					break;
 
-				case PCL_ALIEN_LEVEL2:
-				case PCL_ALIEN_LEVEL2_UPG:
+				case PCL_ALIEN_MARAUDER:
+				case PCL_ALIEN_MARAUDER_UPG:
 					CG_AlienLevel2Text( text, ps );
 					break;
 
-				case PCL_ALIEN_LEVEL3:
-				case PCL_ALIEN_LEVEL3_UPG:
+				case PCL_ALIEN_DRAGOON:
+				case PCL_ALIEN_DRAGOON_UPG:
 					CG_AlienLevel3Text( text, ps );
 					break;
 
-				case PCL_ALIEN_LEVEL4:
+				case PCL_ALIEN_TYRANT:
 					CG_AlienLevel4Text( text, ps );
 					break;
 

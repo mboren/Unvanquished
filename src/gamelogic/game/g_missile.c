@@ -871,7 +871,7 @@ gentity_t *fire_slowBlob( gentity_t *self, vec3_t start, vec3_t dir )
 	bolt->s.generic1 = self->s.generic1; //weaponMode
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = ABUILDER_BLOB_DMG;
+	bolt->damage = GRANGER_BLOB_DMG;
 	bolt->splashDamage = 0;
 	bolt->splashRadius = 0;
 	bolt->methodOfDeath = MOD_SLOWBLOB;
@@ -882,7 +882,7 @@ gentity_t *fire_slowBlob( gentity_t *self, vec3_t start, vec3_t dir )
 	bolt->s.pos.trType = TR_GRAVITY;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
 	VectorCopy( start, bolt->s.pos.trBase );
-	VectorScale( dir, ABUILDER_BLOB_SPEED, bolt->s.pos.trDelta );
+	VectorScale( dir, GRANGER_BLOB_SPEED, bolt->s.pos.trDelta );
 	SnapVector( bolt->s.pos.trDelta );  // save net bandwidth
 	VectorCopy( start, bolt->r.currentOrigin );
 
@@ -943,22 +943,22 @@ gentity_t *fire_bounceBall( gentity_t *self, vec3_t start, vec3_t dir )
 	bolt->nextthink = level.time + 3000;
 	bolt->think = G_ExplodeMissile;
 	bolt->s.eType = ET_MISSILE;
-	bolt->s.weapon = WP_ALEVEL3_UPG;
+	bolt->s.weapon = WP_DRAGOON_UPG;
 	bolt->s.generic1 = self->s.generic1; //weaponMode
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = LEVEL3_BOUNCEBALL_DMG;
-	bolt->splashDamage = LEVEL3_BOUNCEBALL_DMG;
-	bolt->splashRadius = LEVEL3_BOUNCEBALL_RADIUS;
-	bolt->methodOfDeath = MOD_LEVEL3_BOUNCEBALL;
-	bolt->splashMethodOfDeath = MOD_LEVEL3_BOUNCEBALL;
+	bolt->damage = DRAGOON_BOUNCEBALL_DMG;
+	bolt->splashDamage = DRAGOON_BOUNCEBALL_DMG;
+	bolt->splashRadius = DRAGOON_BOUNCEBALL_RADIUS;
+	bolt->methodOfDeath = MOD_DRAGOON_BOUNCEBALL;
+	bolt->splashMethodOfDeath = MOD_DRAGOON_BOUNCEBALL;
 	bolt->clipmask = MASK_SHOT;
 	bolt->target_ent = NULL;
 
 	bolt->s.pos.trType = TR_GRAVITY;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
 	VectorCopy( start, bolt->s.pos.trBase );
-	VectorScale( dir, LEVEL3_BOUNCEBALL_SPEED, bolt->s.pos.trDelta );
+	VectorScale( dir, DRAGOON_BOUNCEBALL_SPEED, bolt->s.pos.trDelta );
 	SnapVector( bolt->s.pos.trDelta );  // save net bandwidth
 	VectorCopy( start, bolt->r.currentOrigin );
 

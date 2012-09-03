@@ -2558,19 +2558,19 @@ static void UI_LoadAlienClasses( void )
 {
 	uiInfo.alienClassCount = 0;
 
-	if ( BG_ClassIsAllowed( PCL_ALIEN_LEVEL0 ) )
+	if ( BG_ClassIsAllowed( PCL_ALIEN_DRETCH ) )
 	{
-		UI_AddClass( PCL_ALIEN_LEVEL0 );
+		UI_AddClass( PCL_ALIEN_DRETCH );
 	}
 
-	if ( BG_ClassIsAllowed( PCL_ALIEN_BUILDER0_UPG ) &&
-	     BG_ClassAllowedInStage( PCL_ALIEN_BUILDER0_UPG, UI_GetCurrentAlienStage() ) )
+	if ( BG_ClassIsAllowed( PCL_ALIEN_GRANGER_UPG ) &&
+	     BG_ClassAllowedInStage( PCL_ALIEN_GRANGER_UPG, UI_GetCurrentAlienStage() ) )
 	{
-		UI_AddClass( PCL_ALIEN_BUILDER0_UPG );
+		UI_AddClass( PCL_ALIEN_GRANGER_UPG );
 	}
-	else if ( BG_ClassIsAllowed( PCL_ALIEN_BUILDER0 ) )
+	else if ( BG_ClassIsAllowed( PCL_ALIEN_GRANGER ) )
 	{
-		UI_AddClass( PCL_ALIEN_BUILDER0 );
+		UI_AddClass( PCL_ALIEN_GRANGER );
 	}
 }
 

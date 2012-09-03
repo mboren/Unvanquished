@@ -34,107 +34,107 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define ALIEN_WDMG_MODIFIER           1.0f
 #define ADM(d) ((int)((float)d * ALIEN_WDMG_MODIFIER ))
 
-#define ABUILDER_BUILD_REPEAT         500
-#define ABUILDER_CLAW_DMG             ADM(20)
-#define ABUILDER_CLAW_RANGE           64.0f
-#define ABUILDER_CLAW_WIDTH           4.0f
-#define ABUILDER_CLAW_REPEAT          1000
-#define ABUILDER_CLAW_K_SCALE         1.0f
-#define ABUILDER_BLOB_DMG             ADM(4)
-#define ABUILDER_BLOB_REPEAT          1000
-#define ABUILDER_BLOB_SPEED           800.0f
-#define ABUILDER_BLOB_SPEED_MOD       0.5f
-#define ABUILDER_BLOB_TIME            2000
+#define GRANGER_BUILD_REPEAT         500
+#define GRANGER_CLAW_DMG             ADM(20)
+#define GRANGER_CLAW_RANGE           64.0f
+#define GRANGER_CLAW_WIDTH           4.0f
+#define GRANGER_CLAW_REPEAT          1000
+#define GRANGER_CLAW_K_SCALE         1.0f
+#define GRANGER_BLOB_DMG             ADM(4)
+#define GRANGER_BLOB_REPEAT          1000
+#define GRANGER_BLOB_SPEED           800.0f
+#define GRANGER_BLOB_SPEED_MOD       0.5f
+#define GRANGER_BLOB_TIME            2000
 
-#define LEVEL0_BITE_DMG               ADM(36)
-#define LEVEL0_BITE_RANGE             64.0f
-#define LEVEL0_BITE_WIDTH             6.0f
-#define LEVEL0_BITE_REPEAT            500
-#define LEVEL0_BITE_K_SCALE           1.0f
+#define DRETCH_BITE_DMG               ADM(36)
+#define DRETCH_BITE_RANGE             64.0f
+#define DRETCH_BITE_WIDTH             6.0f
+#define DRETCH_BITE_REPEAT            500
+#define DRETCH_BITE_K_SCALE           1.0f
 
-#define LEVEL1_CLAW_DMG               ADM(32)
-#define LEVEL1_CLAW_RANGE             80.0f // Claw and grab range normalized. Not sure on this one, but it was pretty widely requested.
-#define LEVEL1_CLAW_U_RANGE           LEVEL1_CLAW_RANGE + 3.0f
-#define LEVEL1_CLAW_WIDTH             10.0f
-#define LEVEL1_CLAW_REPEAT            600
-#define LEVEL1_CLAW_U_REPEAT          500
-#define LEVEL1_CLAW_K_SCALE           1.0f
-#define LEVEL1_CLAW_U_K_SCALE         1.0f
-#define LEVEL1_GRAB_RANGE             80.0f // Claw and grab range normalized.
-#define LEVEL1_GRAB_U_RANGE           LEVEL1_GRAB_RANGE + 3.0f
-#define LEVEL1_GRAB_TIME              300
-#define LEVEL1_GRAB_U_TIME            300
-#define LEVEL1_PCLOUD_DMG             ADM(4)
-#define LEVEL1_PCLOUD_RANGE           120.0f
-#define LEVEL1_PCLOUD_REPEAT          2000
-#define LEVEL1_PCLOUD_TIME            10000
-#define LEVEL1_REGEN_MOD              2.0f
-#define LEVEL1_UPG_REGEN_MOD          3.0f
-#define LEVEL1_REGEN_SCOREINC         AVM(100) // score added for healing per 10s
-#define LEVEL1_UPG_REGEN_SCOREINC     AVM(200)
+#define BASILISK_CLAW_DMG               ADM(32)
+#define BASILISK_CLAW_RANGE             80.0f // Claw and grab range normalized. Not sure on this one, but it was pretty widely requested.
+#define BASILISK_CLAW_U_RANGE           BASILISK_CLAW_RANGE + 3.0f
+#define BASILISK_CLAW_WIDTH             10.0f
+#define BASILISK_CLAW_REPEAT            600
+#define BASILISK_CLAW_U_REPEAT          500
+#define BASILISK_CLAW_K_SCALE           1.0f
+#define BASILISK_CLAW_U_K_SCALE         1.0f
+#define BASILISK_GRAB_RANGE             80.0f // Claw and grab range normalized.
+#define BASILISK_GRAB_U_RANGE           BASILISK_GRAB_RANGE + 3.0f
+#define BASILISK_GRAB_TIME              300
+#define BASILISK_GRAB_U_TIME            300
+#define BASILISK_PCLOUD_DMG             ADM(4)
+#define BASILISK_PCLOUD_RANGE           120.0f
+#define BASILISK_PCLOUD_REPEAT          2000
+#define BASILISK_PCLOUD_TIME            10000
+#define BASILISK_REGEN_MOD              2.0f
+#define BASILISK_UPG_REGEN_MOD          3.0f
+#define BASILISK_REGEN_SCOREINC         AVM(100) // score added for healing per 10s
+#define BASILISK_UPG_REGEN_SCOREINC     AVM(200)
 
-#define LEVEL2_CLAW_DMG               ADM(40)
-#define LEVEL2_CLAW_RANGE             80.0f
-#define LEVEL2_CLAW_U_RANGE           LEVEL2_CLAW_RANGE + 2.0f
-#define LEVEL2_CLAW_WIDTH             14.0f
-#define LEVEL2_CLAW_REPEAT            500
-#define LEVEL2_CLAW_K_SCALE           1.0f
-#define LEVEL2_CLAW_U_REPEAT          400
-#define LEVEL2_CLAW_U_K_SCALE         1.0f
-#define LEVEL2_AREAZAP_DMG            ADM(60)
-#define LEVEL2_AREAZAP_RANGE          200.0f
-#define LEVEL2_AREAZAP_CHAIN_RANGE    150.0f
-#define LEVEL2_AREAZAP_CHAIN_FALLOFF  8.0f
-#define LEVEL2_AREAZAP_WIDTH          15.0f
-#define LEVEL2_AREAZAP_REPEAT         1500
-#define LEVEL2_AREAZAP_TIME           1000
-#define LEVEL2_AREAZAP_MAX_TARGETS    5
-#define LEVEL2_WALLJUMP_MAXSPEED      1000.0f
+#define MARAUDER_CLAW_DMG               ADM(40)
+#define MARAUDER_CLAW_RANGE             80.0f
+#define MARAUDER_CLAW_U_RANGE           MARAUDER_CLAW_RANGE + 2.0f
+#define MARAUDER_CLAW_WIDTH             14.0f
+#define MARAUDER_CLAW_REPEAT            500
+#define MARAUDER_CLAW_K_SCALE           1.0f
+#define MARAUDER_CLAW_U_REPEAT          400
+#define MARAUDER_CLAW_U_K_SCALE         1.0f
+#define MARAUDER_AREAZAP_DMG            ADM(60)
+#define MARAUDER_AREAZAP_RANGE          200.0f
+#define MARAUDER_AREAZAP_CHAIN_RANGE    150.0f
+#define MARAUDER_AREAZAP_CHAIN_FALLOFF  8.0f
+#define MARAUDER_AREAZAP_WIDTH          15.0f
+#define MARAUDER_AREAZAP_REPEAT         1500
+#define MARAUDER_AREAZAP_TIME           1000
+#define MARAUDER_AREAZAP_MAX_TARGETS    5
+#define MARAUDER_WALLJUMP_MAXSPEED      1000.0f
 
-#define LEVEL3_CLAW_DMG               ADM(80)
-#define LEVEL3_CLAW_RANGE             80.0f // Increased claw range
-#define LEVEL3_CLAW_UPG_RANGE         LEVEL3_CLAW_RANGE + 3.0f
-#define LEVEL3_CLAW_WIDTH             11.0f //
-#define LEVEL3_CLAW_REPEAT            750 // Lowered repeat
-#define LEVEL3_CLAW_K_SCALE           1.0f
-#define LEVEL3_CLAW_U_REPEAT          700 // Lowered repeat for Adv. Goon. Standard value is 100ms below standard goon, but 650 is a bit fast for my taste.
-#define LEVEL3_CLAW_U_K_SCALE         0.75f
-#define LEVEL3_POUNCE_DMG             ADM(75) // Reduced damage. Pounce is very powerful as it is.
-#define LEVEL3_POUNCE_RANGE           55.0f // Pounce range raised by 7.0. May need to be nerfed, still want to test like this though.
-#define LEVEL3_POUNCE_UPG_RANGE       LEVEL3_POUNCE_RANGE + 3.0f
-#define LEVEL3_POUNCE_WIDTH           12.0f // Pounce width narrowed. May scale this down even further.
-#define LEVEL3_POUNCE_TIME            800 // Reduced this by 100ms, may need nerfing.
-#define LEVEL3_POUNCE_TIME_UPG        800 // Evened with standard goon. I'd like to keep this here even if standard goon charge time is raised.
-#define LEVEL3_POUNCE_TIME_MIN        200 // msec before which pounce cancels
-#define LEVEL3_POUNCE_REPEAT          400 // msec before a new pounce starts
-#define LEVEL3_POUNCE_SPEED_MOD       0.85f // Whales: Reduced the slowdown from a charged pounce by 0.10
-#define LEVEL3_POUNCE_JUMP_MAG        750 // Raised by 50,
-#define LEVEL3_POUNCE_JUMP_MAG_UPG    850 // Raised by 50.
-#define LEVEL3_BOUNCEBALL_DMG         ADM(110)
-#define LEVEL3_BOUNCEBALL_REPEAT      1200
-#define LEVEL3_BOUNCEBALL_SPEED       1000.0f
-#define LEVEL3_BOUNCEBALL_RADIUS      75
-#define LEVEL3_BOUNCEBALL_REGEN       12500 // Reduced regen time.
+#define DRAGOON_CLAW_DMG               ADM(80)
+#define DRAGOON_CLAW_RANGE             80.0f // Increased claw range
+#define DRAGOON_CLAW_UPG_RANGE         DRAGOON_CLAW_RANGE + 3.0f
+#define DRAGOON_CLAW_WIDTH             11.0f //
+#define DRAGOON_CLAW_REPEAT            750 // Lowered repeat
+#define DRAGOON_CLAW_K_SCALE           1.0f
+#define DRAGOON_CLAW_U_REPEAT          700 // Lowered repeat for Adv. Goon. Standard value is 100ms below standard goon, but 650 is a bit fast for my taste.
+#define DRAGOON_CLAW_U_K_SCALE         0.75f
+#define DRAGOON_POUNCE_DMG             ADM(75) // Reduced damage. Pounce is very powerful as it is.
+#define DRAGOON_POUNCE_RANGE           55.0f // Pounce range raised by 7.0. May need to be nerfed, still want to test like this though.
+#define DRAGOON_POUNCE_UPG_RANGE       DRAGOON_POUNCE_RANGE + 3.0f
+#define DRAGOON_POUNCE_WIDTH           12.0f // Pounce width narrowed. May scale this down even further.
+#define DRAGOON_POUNCE_TIME            800 // Reduced this by 100ms, may need nerfing.
+#define DRAGOON_POUNCE_TIME_UPG        800 // Evened with standard goon. I'd like to keep this here even if standard goon charge time is raised.
+#define DRAGOON_POUNCE_TIME_MIN        200 // msec before which pounce cancels
+#define DRAGOON_POUNCE_REPEAT          400 // msec before a new pounce starts
+#define DRAGOON_POUNCE_SPEED_MOD       0.85f // Whales: Reduced the slowdown from a charged pounce by 0.10
+#define DRAGOON_POUNCE_JUMP_MAG        750 // Raised by 50,
+#define DRAGOON_POUNCE_JUMP_MAG_UPG    850 // Raised by 50.
+#define DRAGOON_BOUNCEBALL_DMG         ADM(110)
+#define DRAGOON_BOUNCEBALL_REPEAT      1200
+#define DRAGOON_BOUNCEBALL_SPEED       1000.0f
+#define DRAGOON_BOUNCEBALL_RADIUS      75
+#define DRAGOON_BOUNCEBALL_REGEN       12500 // Reduced regen time.
 
-#define LEVEL4_CLAW_DMG               ADM(100)
-#define LEVEL4_CLAW_RANGE             100.0f
-#define LEVEL4_CLAW_WIDTH             14.0f
-#define LEVEL4_CLAW_HEIGHT            20.0f
-#define LEVEL4_CLAW_REPEAT            800
-#define LEVEL4_CLAW_K_SCALE           0.7f
+#define TYRANT_CLAW_DMG               ADM(100)
+#define TYRANT_CLAW_RANGE             100.0f
+#define TYRANT_CLAW_WIDTH             14.0f
+#define TYRANT_CLAW_HEIGHT            20.0f
+#define TYRANT_CLAW_REPEAT            800
+#define TYRANT_CLAW_K_SCALE           0.7f
 
-#define LEVEL4_TRAMPLE_DMG            ADM(85) // 111 -> 85
-#define LEVEL4_TRAMPLE_SPEED          2.0f
-#define LEVEL4_TRAMPLE_CHARGE_MIN     375 // minimum msec to start a charge
-#define LEVEL4_TRAMPLE_CHARGE_MAX     1000 // msec to maximum charge stored
-#define LEVEL4_TRAMPLE_CHARGE_TRIGGER 3000 // msec charge starts on its own
-#define LEVEL4_TRAMPLE_DURATION       3000 // msec trample lasts on full charge
-#define LEVEL4_TRAMPLE_STOP_PENALTY   1 // charge lost per msec when stopped
-#define LEVEL4_TRAMPLE_REPEAT         300 // Time until charge rehits a player Ishq: 100->300
+#define TYRANT_TRAMPLE_DMG            ADM(85) // 111 -> 85
+#define TYRANT_TRAMPLE_SPEED          2.0f
+#define TYRANT_TRAMPLE_CHARGE_MIN     375 // minimum msec to start a charge
+#define TYRANT_TRAMPLE_CHARGE_MAX     1000 // msec to maximum charge stored
+#define TYRANT_TRAMPLE_CHARGE_TRIGGER 3000 // msec charge starts on its own
+#define TYRANT_TRAMPLE_DURATION       3000 // msec trample lasts on full charge
+#define TYRANT_TRAMPLE_STOP_PENALTY   1 // charge lost per msec when stopped
+#define TYRANT_TRAMPLE_REPEAT         300 // Time until charge rehits a player Ishq: 100->300
 
-#define LEVEL4_CRUSH_DAMAGE_PER_V     0.5f // damage per falling velocity
-#define LEVEL4_CRUSH_DAMAGE           120 // to players only
-#define LEVEL4_CRUSH_REPEAT           500 // player damage repeat
+#define TYRANT_CRUSH_DAMAGE_PER_V     0.5f // damage per falling velocity
+#define TYRANT_CRUSH_DAMAGE           120 // to players only
+#define TYRANT_CRUSH_REPEAT           500 // player damage repeat
 
 /*
  * ALIEN classes
@@ -152,65 +152,65 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define ALIEN_VALUE_MODIFIER 1.0f
 #define AVM(h) ((int)((float)h * ALIEN_VALUE_MODIFIER ))
 
-#define ABUILDER_SPEED       0.9f
-#define ABUILDER_VALUE       AVM(240)
-#define ABUILDER_HEALTH      AHM(50)
-#define ABUILDER_REGEN       ( 0.04f * ABUILDER_HEALTH )
-#define ABUILDER_COST        0
+#define GRANGER_SPEED       0.9f
+#define GRANGER_VALUE       AVM(240)
+#define GRANGER_HEALTH      AHM(50)
+#define GRANGER_REGEN       ( 0.04f * GRANGER_HEALTH )
+#define GRANGER_COST        0
 
-#define ABUILDER_UPG_SPEED   0.9f
-#define ABUILDER_UPG_VALUE   AVM(300)
-#define ABUILDER_UPG_HEALTH  AHM(75)
-#define ABUILDER_UPG_REGEN   ( 0.04f * ABUILDER_UPG_HEALTH )
-#define ABUILDER_UPG_COST    0
+#define GRANGER_UPG_SPEED   0.9f
+#define GRANGER_UPG_VALUE   AVM(300)
+#define GRANGER_UPG_HEALTH  AHM(75)
+#define GRANGER_UPG_REGEN   ( 0.04f * GRANGER_UPG_HEALTH )
+#define GRANGER_UPG_COST    0
 
-#define LEVEL0_SPEED         1.4f
-#define LEVEL0_VALUE         AVM(180)
-#define LEVEL0_HEALTH        AHM(25)
-#define LEVEL0_REGEN         ( 0.05f * LEVEL0_HEALTH )
-#define LEVEL0_COST          0
+#define DRETCH_SPEED         1.4f
+#define DRETCH_VALUE         AVM(180)
+#define DRETCH_HEALTH        AHM(25)
+#define DRETCH_REGEN         ( 0.05f * DRETCH_HEALTH )
+#define DRETCH_COST          0
 
-#define LEVEL1_SPEED         1.25f
-#define LEVEL1_VALUE         AVM(270)
-#define LEVEL1_HEALTH        AHM(60)
-#define LEVEL1_REGEN         ( 0.03f * LEVEL1_HEALTH )
-#define LEVEL1_COST          1
+#define BASILISK_SPEED         1.25f
+#define BASILISK_VALUE         AVM(270)
+#define BASILISK_HEALTH        AHM(60)
+#define BASILISK_REGEN         ( 0.03f * BASILISK_HEALTH )
+#define BASILISK_COST          1
 
-#define LEVEL1_UPG_SPEED     1.25f
-#define LEVEL1_UPG_VALUE     AVM(330)
-#define LEVEL1_UPG_HEALTH    AHM(80)
-#define LEVEL1_UPG_REGEN     ( 0.03f * LEVEL1_UPG_HEALTH )
-#define LEVEL1_UPG_COST      1
+#define BASILISK_UPG_SPEED     1.25f
+#define BASILISK_UPG_VALUE     AVM(330)
+#define BASILISK_UPG_HEALTH    AHM(80)
+#define BASILISK_UPG_REGEN     ( 0.03f * BASILISK_UPG_HEALTH )
+#define BASILISK_UPG_COST      1
 
-#define LEVEL2_SPEED         1.2f
-#define LEVEL2_VALUE         AVM(420)
-#define LEVEL2_HEALTH        AHM(150)
-#define LEVEL2_REGEN         ( 0.03f * LEVEL2_HEALTH )
-#define LEVEL2_COST          1
+#define MARAUDER_SPEED         1.2f
+#define MARAUDER_VALUE         AVM(420)
+#define MARAUDER_HEALTH        AHM(150)
+#define MARAUDER_REGEN         ( 0.03f * MARAUDER_HEALTH )
+#define MARAUDER_COST          1
 
-#define LEVEL2_UPG_SPEED     1.2f
-#define LEVEL2_UPG_VALUE     AVM(540)
-#define LEVEL2_UPG_HEALTH    AHM(175)
-#define LEVEL2_UPG_REGEN     ( 0.03f * LEVEL2_UPG_HEALTH )
-#define LEVEL2_UPG_COST      1
+#define MARAUDER_UPG_SPEED     1.2f
+#define MARAUDER_UPG_VALUE     AVM(540)
+#define MARAUDER_UPG_HEALTH    AHM(175)
+#define MARAUDER_UPG_REGEN     ( 0.03f * MARAUDER_UPG_HEALTH )
+#define MARAUDER_UPG_COST      1
 
-#define LEVEL3_SPEED         1.2f // Raised goon speed by .1 to match backpedalling humans. May need nerf.
-#define LEVEL3_VALUE         AVM(600)
-#define LEVEL3_HEALTH        AHM(200)
-#define LEVEL3_REGEN         ( 0.03f * LEVEL3_HEALTH )
-#define LEVEL3_COST          1
+#define DRAGOON_SPEED         1.2f // Raised goon speed by .1 to match backpedalling humans. May need nerf.
+#define DRAGOON_VALUE         AVM(600)
+#define DRAGOON_HEALTH        AHM(200)
+#define DRAGOON_REGEN         ( 0.03f * DRAGOON_HEALTH )
+#define DRAGOON_COST          1
 
-#define LEVEL3_UPG_SPEED     1.2f // Raised by .1 to match standard goon.
-#define LEVEL3_UPG_VALUE     AVM(720)
-#define LEVEL3_UPG_HEALTH    AHM(250)
-#define LEVEL3_UPG_REGEN     ( 0.03f * LEVEL3_UPG_HEALTH )
-#define LEVEL3_UPG_COST      1
+#define DRAGOON_UPG_SPEED     1.2f // Raised by .1 to match standard goon.
+#define DRAGOON_UPG_VALUE     AVM(720)
+#define DRAGOON_UPG_HEALTH    AHM(250)
+#define DRAGOON_UPG_REGEN     ( 0.03f * DRAGOON_UPG_HEALTH )
+#define DRAGOON_UPG_COST      1
 
-#define LEVEL4_SPEED         1.1f // Lowered by .1
-#define LEVEL4_VALUE         AVM(960)
-#define LEVEL4_HEALTH        AHM(350)
-#define LEVEL4_REGEN         ( 0.025f * LEVEL4_HEALTH )
-#define LEVEL4_COST          2
+#define TYRANT_SPEED         1.1f // Lowered by .1
+#define TYRANT_VALUE         AVM(960)
+#define TYRANT_HEALTH        AHM(350)
+#define TYRANT_REGEN         ( 0.025f * TYRANT_HEALTH )
+#define TYRANT_COST          2
 
 /*
  * ALIEN buildables
@@ -653,7 +653,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define DEFAULT_FREEKILL_PERIOD            "120" //seconds
 #define FREEKILL_ALIEN                     ALIEN_CREDITS_PER_KILL
-#define FREEKILL_HUMAN                     LEVEL0_VALUE
+#define FREEKILL_HUMAN                     DRETCH_VALUE
 
 #define DEFAULT_ALIEN_BUILDPOINTS          "150"
 #define DEFAULT_ALIEN_QUEUE_TIME           "12000"

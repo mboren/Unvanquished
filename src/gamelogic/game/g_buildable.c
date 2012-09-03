@@ -1126,8 +1126,8 @@ void AOvermind_Think( gentity_t *self )
 				builder = &g_entities[ level.sortedClients[ i ] ];
 
 				if ( builder->health > 0 &&
-				     ( builder->client->pers.classSelection == PCL_ALIEN_BUILDER0 ||
-				       builder->client->pers.classSelection == PCL_ALIEN_BUILDER0_UPG ) )
+				     ( builder->client->pers.classSelection == PCL_ALIEN_GRANGER ||
+				       builder->client->pers.classSelection == PCL_ALIEN_GRANGER_UPG ) )
 				{
 					haveBuilder = qtrue;
 					break;

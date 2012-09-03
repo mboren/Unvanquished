@@ -958,15 +958,15 @@ static const classAttributes_t bg_classList[] =
 		0 //int     value;
 	},
 	{
-		PCL_ALIEN_BUILDER0, //int     number;
+		PCL_ALIEN_GRANGER, //int     number;
 		"builder", //char    *name;
 		"Responsible for building and maintaining all the alien structures. "
 		"Has a weak melee slash attack.",
 		"cg_fov_builder",  // const char* fovCvar
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		ABUILDER_HEALTH, //int     health;
+		GRANGER_HEALTH, //int     health;
 		0.2f, //float   fallDamage;
-		ABUILDER_REGEN, //float   regenRate;
+		GRANGER_REGEN, //float   regenRate;
 		SCA_TAKESFALLDAMAGE | SCA_FOVWARPS | SCA_ALIENSENSE, //int     abilities;
 		WP_ABUILD, //weapon_t  startWeapon;
 		95.0f, //float   buildDist;
@@ -974,28 +974,28 @@ static const classAttributes_t bg_classList[] =
 		0.001f, //float   bob;
 		2.0f, //float   bobCycle;
 		150, //int     steptime;
-		ABUILDER_SPEED, //float   speed;
+		GRANGER_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		100.0f, //float   stopSpeed;
 		195.0f, //float   jumpMagnitude;
 		1.0f, //float   knockbackScale;
-		{ PCL_ALIEN_BUILDER0_UPG, PCL_ALIEN_LEVEL0,     PCL_NONE }, //int     children[ 3 ];
-		ABUILDER_COST, //int     cost;
-		ABUILDER_VALUE //int     value;
+		{ PCL_ALIEN_GRANGER_UPG, PCL_ALIEN_DRETCH,     PCL_NONE }, //int     children[ 3 ];
+		GRANGER_COST, //int     cost;
+		GRANGER_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_BUILDER0_UPG, //int     number;
+		PCL_ALIEN_GRANGER_UPG, //int     number;
 		"builderupg", //char    *name;
 		"Similar to the base Granger, except that in addition to "
 		"being able to build structures it has a spit attack "
 		"that slows victims and the ability to crawl on walls.",
 		"cg_fov_builder",  // const char* fovCvar
 		( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		ABUILDER_UPG_HEALTH, //int     health;
+		GRANGER_UPG_HEALTH, //int     health;
 		0.2f, //float   fallDamage;
-		ABUILDER_UPG_REGEN, //float   regenRate;
+		GRANGER_UPG_REGEN, //float   regenRate;
 		SCA_TAKESFALLDAMAGE | SCA_FOVWARPS | SCA_WALLCLIMBER | SCA_ALIENSENSE, //int     abilities;
 		WP_ABUILD2, //weapon_t  startWeapon;
 		105.0f, //float   buildDist;
@@ -1003,239 +1003,239 @@ static const classAttributes_t bg_classList[] =
 		0.001f, //float   bob;
 		2.0f, //float   bobCycle;
 		100, //int     steptime;
-		ABUILDER_UPG_SPEED, //float   speed;
+		GRANGER_UPG_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		100.0f, //float   stopSpeed;
 		270.0f, //float   jumpMagnitude;
 		1.0f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL0,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
-		ABUILDER_UPG_COST, //int     cost;
-		ABUILDER_UPG_VALUE //int     value;
+		{ PCL_ALIEN_DRETCH,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
+		GRANGER_UPG_COST, //int     cost;
+		GRANGER_UPG_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL0, //int     number;
-		"level0", //char    *name;
+		PCL_ALIEN_DRETCH, //int     number;
+		"dretch", //char    *name;
 		"Has a lethal reflexive bite and the ability to crawl on "
 		"walls and ceilings.",
-		"cg_fov_level0",  // const char* fovCvar
+		"cg_fov_dretch",  // const char* fovCvar
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		LEVEL0_HEALTH, //int     health;
+		DRETCH_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL0_REGEN, //float   regenRate;
+		DRETCH_REGEN, //float   regenRate;
 		SCA_WALLCLIMBER | SCA_FOVWARPS | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL0, //weapon_t  startWeapon;
+		WP_DRETCH, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		140, //int     fov;
 		0.0f, //float   bob;
 		2.5f, //float   bobCycle;
 		25, //int     steptime;
-		LEVEL0_SPEED, //float   speed;
+		DRETCH_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		400.0f, //float   stopSpeed;
 		250.0f, //float   jumpMagnitude;
 		2.0f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL1,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
-		LEVEL0_COST, //int     cost;
-		LEVEL0_VALUE //int     value;
+		{ PCL_ALIEN_BASILISK,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
+		DRETCH_COST, //int     cost;
+		DRETCH_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL1, //int     number;
-		"level1", //char    *name;
+		PCL_ALIEN_BASILISK, //int     number;
+		"basilisk", //char    *name;
 		"A support class able to crawl on walls and ceilings. Its melee "
 		"attack is most effective when combined with the ability to grab "
 		"and hold its victims in place. Provides a weak healing aura "
 		"that accelerates the healing rate of nearby aliens.",
-		"cg_fov_level1",  // const char* fovCvar
+		"cg_fov_basilisk",  // const char* fovCvar
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		LEVEL1_HEALTH, //int     health;
+		BASILISK_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL1_REGEN, //float   regenRate;
+		BASILISK_REGEN, //float   regenRate;
 		SCA_FOVWARPS | SCA_WALLCLIMBER | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL1, //weapon_t  startWeapon;
+		WP_BASILISK, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		120, //int     fov;
 		0.001f, //float   bob;
 		1.8f, //float   bobCycle;
 		60, //int     steptime;
-		LEVEL1_SPEED, //float   speed;
+		BASILISK_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		300.0f, //float   stopSpeed;
 		310.0f, //float   jumpMagnitude;
 		1.2f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL2,       PCL_ALIEN_LEVEL1_UPG, PCL_NONE }, //int     children[ 3 ];
-		LEVEL1_COST, //int     cost;
-		LEVEL1_VALUE //int     value;
+		{ PCL_ALIEN_MARAUDER,       PCL_ALIEN_BASILISK_UPG, PCL_NONE }, //int     children[ 3 ];
+		BASILISK_COST, //int     cost;
+		BASILISK_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL1_UPG, //int     number;
-		"level1upg", //char    *name;
+		PCL_ALIEN_BASILISK_UPG, //int     number;
+		"basiliskupg", //char    *name;
 		"In addition to the basic Basilisk abilities, the Advanced "
 		"Basilisk sprays a poisonous gas which disorients any "
 		"nearby humans. Has a strong healing aura that "
 		"that accelerates the healing rate of nearby aliens.",
-		"cg_fov_level1",  // const char* fovCvar
+		"cg_fov_basilisk",  // const char* fovCvar
 		( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		LEVEL1_UPG_HEALTH, //int     health;
+		BASILISK_UPG_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL1_UPG_REGEN, //float   regenRate;
+		BASILISK_UPG_REGEN, //float   regenRate;
 		SCA_FOVWARPS | SCA_WALLCLIMBER | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL1_UPG, //weapon_t  startWeapon;
+		WP_BASILISK_UPG, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		120, //int     fov;
 		0.001f, //float   bob;
 		1.8f, //float   bobCycle;
 		60, //int     steptime;
-		LEVEL1_UPG_SPEED, //float   speed;
+		BASILISK_UPG_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		300.0f, //float   stopSpeed;
 		310.0f, //float   jumpMagnitude;
 		1.1f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL2,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
-		LEVEL1_UPG_COST, //int     cost;
-		LEVEL1_UPG_VALUE //int     value;
+		{ PCL_ALIEN_MARAUDER,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
+		BASILISK_UPG_COST, //int     cost;
+		BASILISK_UPG_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL2, //int     number;
-		"level2", //char    *name;
+		PCL_ALIEN_MARAUDER, //int     number;
+		"marauder", //char    *name;
 		"Has a melee attack and the ability to jump off walls. This "
 		"allows the Marauder to gather great speed in enclosed areas.",
-		"cg_fov_level2",  // const char* fovCvar
+		"cg_fov_marauder",  // const char* fovCvar
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		LEVEL2_HEALTH, //int     health;
+		MARAUDER_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL2_REGEN, //float   regenRate;
+		MARAUDER_REGEN, //float   regenRate;
 		SCA_WALLJUMPER | SCA_FOVWARPS | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL2, //weapon_t  startWeapon;
+		WP_MARAUDER, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		90, //int     fov;
 		0.001f, //float   bob;
 		1.5f, //float   bobCycle;
 		80, //int     steptime;
-		LEVEL2_SPEED, //float   speed;
+		MARAUDER_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		3.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		100.0f, //float   stopSpeed;
 		340.0f, //float   jumpMagnitude; 380 -> 340
 		0.8f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL3,       PCL_ALIEN_LEVEL2_UPG, PCL_NONE }, //int     children[ 3 ];
-		LEVEL2_COST, //int     cost;
-		LEVEL2_VALUE //int     value;
+		{ PCL_ALIEN_DRAGOON,       PCL_ALIEN_MARAUDER_UPG, PCL_NONE }, //int     children[ 3 ];
+		MARAUDER_COST, //int     cost;
+		MARAUDER_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL2_UPG, //int     number;
-		"level2upg", //char    *name;
+		PCL_ALIEN_MARAUDER_UPG, //int     number;
+		"marauderupg", //char    *name;
 		"The Advanced Marauder has all the abilities of the basic Marauder "
 		"with the addition of an area effect electric shock attack.",
-		"cg_fov_level2",  // const char* fovCvar
+		"cg_fov_marauder",  // const char* fovCvar
 		( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		LEVEL2_UPG_HEALTH, //int     health;
+		MARAUDER_UPG_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL2_UPG_REGEN, //float   regenRate;
+		MARAUDER_UPG_REGEN, //float   regenRate;
 		SCA_WALLJUMPER | SCA_FOVWARPS | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL2_UPG, //weapon_t  startWeapon;
+		WP_MARAUDER_UPG, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		90, //int     fov;
 		0.001f, //float   bob;
 		1.5f, //float   bobCycle;
 		80, //int     steptime;
-		LEVEL2_UPG_SPEED, //float   speed;
+		MARAUDER_UPG_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		3.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		100.0f, //float   stopSpeed;
 		340.0f, //float   jumpMagnitude; // 380 -> 340
 		0.7f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL3,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
-		LEVEL2_UPG_COST, //int     cost;
-		LEVEL2_UPG_VALUE //int     value;
+		{ PCL_ALIEN_DRAGOON,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
+		MARAUDER_UPG_COST, //int     cost;
+		MARAUDER_UPG_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL3, //int     number;
-		"level3", //char    *name;
+		PCL_ALIEN_DRAGOON, //int     number;
+		"dragoon", //char    *name;
 		"Possesses a melee attack and the pounce ability, which may "
 		"be used as both an attack and a means to reach remote "
 		"locations inaccessible from the ground.",
-		"cg_fov_level3",  // const char* fovCvar
+		"cg_fov_dragoon",  // const char* fovCvar
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		LEVEL3_HEALTH, //int     health;
+		DRAGOON_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL3_REGEN, //float   regenRate;
+		DRAGOON_REGEN, //float   regenRate;
 		SCA_FOVWARPS | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL3, //weapon_t  startWeapon;
+		WP_DRAGOON, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		110, //int     fov;
 		0.0005f, //float   bob;
 		1.3f, //float   bobCycle;
 		90, //int     steptime;
-		LEVEL3_SPEED, //float   speed;
+		DRAGOON_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		200.0f, //float   stopSpeed;
 		270.0f, //float   jumpMagnitude;
 		0.5f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL4,       PCL_ALIEN_LEVEL3_UPG, PCL_NONE }, //int     children[ 3 ];
-		LEVEL3_COST, //int     cost;
-		LEVEL3_VALUE //int     value;
+		{ PCL_ALIEN_TYRANT,       PCL_ALIEN_DRAGOON_UPG, PCL_NONE }, //int     children[ 3 ];
+		DRAGOON_COST, //int     cost;
+		DRAGOON_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL3_UPG, //int     number;
-		"level3upg", //char    *name;
+		PCL_ALIEN_DRAGOON_UPG, //int     number;
+		"dragoonupg", //char    *name;
 		"In addition to the basic Dragoon abilities, the Advanced "
 		"Dragoon has 3 barbs which may be used to attack humans "
 		"from a distance.",
-		"cg_fov_level3",  // const char* fovCvar
+		"cg_fov_dragoon",  // const char* fovCvar
 		( 1 << S2 ) | ( 1 << S3 ), //int  stages;
-		LEVEL3_UPG_HEALTH, //int     health;
+		DRAGOON_UPG_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL3_UPG_REGEN, //float   regenRate;
+		DRAGOON_UPG_REGEN, //float   regenRate;
 		SCA_FOVWARPS | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL3_UPG, //weapon_t  startWeapon;
+		WP_DRAGOON_UPG, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		110, //int     fov;
 		0.0005f, //float   bob;
 		1.3f, //float   bobCycle;
 		90, //int     steptime;
-		LEVEL3_UPG_SPEED, //float   speed;
+		DRAGOON_UPG_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
 		200.0f, //float   stopSpeed;
 		270.0f, //float   jumpMagnitude;
 		0.4f, //float   knockbackScale;
-		{ PCL_ALIEN_LEVEL4,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
-		LEVEL3_UPG_COST, //int     cost;
-		LEVEL3_UPG_VALUE //int     value;
+		{ PCL_ALIEN_TYRANT,       PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
+		DRAGOON_UPG_COST, //int     cost;
+		DRAGOON_UPG_VALUE //int     value;
 	},
 	{
-		PCL_ALIEN_LEVEL4, //int     number;
-		"level4", //char    *name;
+		PCL_ALIEN_TYRANT, //int     number;
+		"tyrant", //char    *name;
 		"A large alien with a strong melee attack, this class can "
 		"also charge at enemy humans and structures, inflicting "
 		"great damage. Any humans or their structures caught under "
 		"a falling Tyrant will be crushed by its weight.",
-		"cg_fov_level4",  // const char* fovCvar
+		"cg_fov_tyrant",  // const char* fovCvar
 		( 1 << S3 ), //int  stages;
-		LEVEL4_HEALTH, //int     health;
+		TYRANT_HEALTH, //int     health;
 		0.0f, //float   fallDamage;
-		LEVEL4_REGEN, //float   regenRate;
+		TYRANT_REGEN, //float   regenRate;
 		SCA_FOVWARPS | SCA_ALIENSENSE, //int     abilities;
-		WP_ALEVEL4, //weapon_t  startWeapon;
+		WP_TYRANT, //weapon_t  startWeapon;
 		0.0f, //float   buildDist;
 		90, //int     fov;
 		0.001f, //float   bob;
 		1.1f, //float   bobCycle;
 		100, //int     steptime;
-		LEVEL4_SPEED, //float   speed;
+		TYRANT_SPEED, //float   speed;
 		10.0f, //float   acceleration;
 		1.0f, //float   airAcceleration;
 		6.5f, //float   friction;
@@ -1243,8 +1243,8 @@ static const classAttributes_t bg_classList[] =
 		170.0f, //float   jumpMagnitude;
 		0.1f, //float   knockbackScale;
 		{ PCL_NONE,               PCL_NONE,             PCL_NONE }, //int     children[ 3 ];
-		LEVEL4_COST, //int     cost;
-		LEVEL4_VALUE //int     value;
+		TYRANT_COST, //int     cost;
+		TYRANT_VALUE //int     value;
 	},
 	{
 		PCL_HUMAN, //int     number;
@@ -1872,22 +1872,22 @@ void BG_InitClassConfigs( void )
 static const weaponAttributes_t bg_weapons[] =
 {
 	{
-		WP_ALEVEL0, //int       number;
+		WP_DRETCH, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level0", //char      *name;
+		"dretch", //char      *name;
 		"Bite", //char      *humanName;
 		"",
 		0, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL0_BITE_REPEAT, //int       repeatRate1;
+		DRETCH_BITE_REPEAT, //int       repeatRate1;
 		0, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL0_BITE_K_SCALE, //float     knockbackScale;
+		DRETCH_BITE_K_SCALE, //float     knockbackScale;
 		qfalse, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -1897,22 +1897,22 @@ static const weaponAttributes_t bg_weapons[] =
 		TEAM_ALIENS //team_t    team;
 	},
 	{
-		WP_ALEVEL1, //int       number;
+		WP_BASILISK, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level1", //char      *name;
+		"basilisk", //char      *name;
 		"Claws", //char      *humanName;
 		"",
 		0, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL1_CLAW_REPEAT, //int       repeatRate1;
+		BASILISK_CLAW_REPEAT, //int       repeatRate1;
 		0, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL1_CLAW_K_SCALE, //float     knockbackScale;
+		BASILISK_CLAW_K_SCALE, //float     knockbackScale;
 		qfalse, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -1922,22 +1922,22 @@ static const weaponAttributes_t bg_weapons[] =
 		TEAM_ALIENS //team_t    team;
 	},
 	{
-		WP_ALEVEL1_UPG, //int       number;
+		WP_BASILISK_UPG, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level1upg", //char      *name;
+		"basiliskupg", //char      *name;
 		"Claws Upgrade", //char      *humanName;
 		"",
 		0, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL1_CLAW_U_REPEAT, //int       repeatRate1;
-		LEVEL1_PCLOUD_REPEAT, //int       repeatRate2;
+		BASILISK_CLAW_U_REPEAT, //int       repeatRate1;
+		BASILISK_PCLOUD_REPEAT, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL1_CLAW_U_K_SCALE, //float     knockbackScale;
+		BASILISK_CLAW_U_K_SCALE, //float     knockbackScale;
 		qtrue, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -1947,22 +1947,22 @@ static const weaponAttributes_t bg_weapons[] =
 		TEAM_ALIENS //team_t    team;
 	},
 	{
-		WP_ALEVEL2, //int       number;
+		WP_MARAUDER, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level2", //char      *name;
+		"marauder", //char      *name;
 		"Bite", //char      *humanName;
 		"",
 		0, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL2_CLAW_REPEAT, //int       repeatRate1;
+		MARAUDER_CLAW_REPEAT, //int       repeatRate1;
 		0, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL2_CLAW_K_SCALE, //float     knockbackScale;
+		MARAUDER_CLAW_K_SCALE, //float     knockbackScale;
 		qfalse, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -1972,22 +1972,22 @@ static const weaponAttributes_t bg_weapons[] =
 		TEAM_ALIENS //team_t    team;
 	},
 	{
-		WP_ALEVEL2_UPG, //int       number;
+		WP_MARAUDER_UPG, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level2upg", //char      *name;
+		"marauderupg", //char      *name;
 		"Zap", //char      *humanName;
 		"",
 		0, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL2_CLAW_U_REPEAT, //int       repeatRate1;
-		LEVEL2_AREAZAP_REPEAT, //int       repeatRate2;
+		MARAUDER_CLAW_U_REPEAT, //int       repeatRate1;
+		MARAUDER_AREAZAP_REPEAT, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL2_CLAW_U_K_SCALE, //float     knockbackScale;
+		MARAUDER_CLAW_U_K_SCALE, //float     knockbackScale;
 		qtrue, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -1997,22 +1997,22 @@ static const weaponAttributes_t bg_weapons[] =
 		TEAM_ALIENS //team_t    team;
 	},
 	{
-		WP_ALEVEL3, //int       number;
+		WP_DRAGOON, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level3", //char      *name;
+		"dragoon", //char      *name;
 		"Pounce", //char      *humanName;
 		"",
 		0, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL3_CLAW_REPEAT, //int       repeatRate1;
+		DRAGOON_CLAW_REPEAT, //int       repeatRate1;
 		0, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL3_CLAW_K_SCALE, //float     knockbackScale;
+		DRAGOON_CLAW_K_SCALE, //float     knockbackScale;
 		qfalse, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -2022,22 +2022,22 @@ static const weaponAttributes_t bg_weapons[] =
 		TEAM_ALIENS //team_t    team;
 	},
 	{
-		WP_ALEVEL3_UPG, //int       number;
+		WP_DRAGOON_UPG, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level3upg", //char      *name;
+		"dragoonupg", //char      *name;
 		"Pounce (upgrade)", //char      *humanName;
 		"",
 		3, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL3_CLAW_U_REPEAT, //int       repeatRate1;
+		DRAGOON_CLAW_U_REPEAT, //int       repeatRate1;
 		0, //int       repeatRate2;
-		LEVEL3_BOUNCEBALL_REPEAT, //int       repeatRate3;
+		DRAGOON_BOUNCEBALL_REPEAT, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL3_CLAW_U_K_SCALE, //float     knockbackScale;
+		DRAGOON_CLAW_U_K_SCALE, //float     knockbackScale;
 		qfalse, //qboolean  hasAltMode;
 		qtrue, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -2047,22 +2047,22 @@ static const weaponAttributes_t bg_weapons[] =
 		TEAM_ALIENS //team_t    team;
 	},
 	{
-		WP_ALEVEL4, //int       number;
+		WP_TYRANT, //int       number;
 		0, //int       price;
 		( 1 << S1 ) | ( 1 << S2 ) | ( 1 << S3 ), //int  stages;
 		SLOT_WEAPON, //int       slots;
-		"level4", //char      *name;
+		"tyrant", //char      *name;
 		"Charge", //char      *humanName;
 		"",
 		0, //int       maxAmmo;
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		LEVEL4_CLAW_REPEAT, //int       repeatRate1;
+		TYRANT_CLAW_REPEAT, //int       repeatRate1;
 		0, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		LEVEL4_CLAW_K_SCALE, //float     knockbackScale;
+		TYRANT_CLAW_K_SCALE, //float     knockbackScale;
 		qfalse, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -2472,11 +2472,11 @@ static const weaponAttributes_t bg_weapons[] =
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		ABUILDER_BUILD_REPEAT, //int       repeatRate1;
-		ABUILDER_CLAW_REPEAT, //int       repeatRate2;
+		GRANGER_BUILD_REPEAT, //int       repeatRate1;
+		GRANGER_CLAW_REPEAT, //int       repeatRate2;
 		0, //int       repeatRate3;
 		0, //int       reloadTime;
-		ABUILDER_CLAW_K_SCALE, //float     knockbackScale;
+		GRANGER_CLAW_K_SCALE, //float     knockbackScale;
 		qtrue, //qboolean  hasAltMode;
 		qfalse, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -2497,11 +2497,11 @@ static const weaponAttributes_t bg_weapons[] =
 		0, //int       maxClips;
 		qtrue, //int       infiniteAmmo;
 		qfalse, //int       usesEnergy;
-		ABUILDER_BUILD_REPEAT, //int       repeatRate1;
-		ABUILDER_CLAW_REPEAT, //int       repeatRate2;
-		ABUILDER_BLOB_REPEAT, //int       repeatRate3;
+		GRANGER_BUILD_REPEAT, //int       repeatRate1;
+		GRANGER_CLAW_REPEAT, //int       repeatRate2;
+		GRANGER_BLOB_REPEAT, //int       repeatRate3;
 		0, //int       reloadTime;
-		ABUILDER_CLAW_K_SCALE, //float     knockbackScale;
+		GRANGER_CLAW_K_SCALE, //float     knockbackScale;
 		qtrue, //qboolean  hasAltMode;
 		qtrue, //qboolean  hasThirdMode;
 		qfalse, //qboolean  canZoom;
@@ -3635,7 +3635,7 @@ BG_PlayerPoisonCloudTime
 */
 int BG_PlayerPoisonCloudTime( playerState_t *ps )
 {
-	int time = LEVEL1_PCLOUD_TIME;
+	int time = BASILISK_PCLOUD_TIME;
 
 	if ( BG_InventoryContainsUpgrade( UP_BATTLESUIT, ps->stats ) )
 	{

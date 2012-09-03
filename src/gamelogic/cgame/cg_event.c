@@ -169,7 +169,7 @@ static void CG_Obituary( entityState_t *ent )
 				message = G_( "%s ^7blew self up\n" );
 				break;
 
-			case MOD_LEVEL3_BOUNCEBALL:
+			case MOD_DRAGOON_BOUNCEBALL:
 				message = G_( "%s ^7sniped self\n" );
 				break;
 
@@ -262,55 +262,55 @@ static void CG_Obituary( entityState_t *ent )
 				message = G_( "%s ^7couldn't escape %s%s^7's grenade\n" );
 				break;
 
-			case MOD_ABUILDER_CLAW:
+			case MOD_GRANGER_CLAW:
 				message = G_( "%s ^7should leave %s%s^7's buildings alone\n" );
 				break;
 
-			case MOD_LEVEL0_BITE:
+			case MOD_DRETCH_BITE:
 				message = G_( "%s ^7was bitten by %s%s\n" );
 				break;
 
-			case MOD_LEVEL1_CLAW:
+			case MOD_BASILISK_CLAW:
 				message = G_( "%s ^7was swiped by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL1;
+				attackerClass = PCL_ALIEN_BASILISK;
 				break;
 
-			case MOD_LEVEL2_CLAW:
+			case MOD_MARAUDER_CLAW:
 				message = G_( "%s ^7was clawed by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL2;
+				attackerClass = PCL_ALIEN_MARAUDER;
 				break;
 
-			case MOD_LEVEL2_ZAP:
+			case MOD_MARAUDER_ZAP:
 				message = G_( "%s ^7was zapped by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL2;
+				attackerClass = PCL_ALIEN_MARAUDER;
 				break;
 
-			case MOD_LEVEL3_CLAW:
+			case MOD_DRAGOON_CLAW:
 				message = G_( "%s ^7was chomped by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL3;
+				attackerClass = PCL_ALIEN_DRAGOON;
 				break;
 
-			case MOD_LEVEL3_POUNCE:
+			case MOD_DRAGOON_POUNCE:
 				message = G_( "%s ^7was pounced upon by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL3;
+				attackerClass = PCL_ALIEN_DRAGOON;
 				break;
 
-			case MOD_LEVEL3_BOUNCEBALL:
+			case MOD_DRAGOON_BOUNCEBALL:
 				message = G_( "%s ^7was sniped by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL3;
+				attackerClass = PCL_ALIEN_DRAGOON;
 				break;
 
-			case MOD_LEVEL4_CLAW:
+			case MOD_TYRANT_CLAW:
 				message = G_( "%s ^7was mauled by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL4;
+				attackerClass = PCL_ALIEN_TYRANT;
 				break;
 
-			case MOD_LEVEL4_TRAMPLE:
+			case MOD_TYRANT_TRAMPLE:
 				message = G_( "%s ^7should have gotten out of the way of %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL4;
+				attackerClass = PCL_ALIEN_TYRANT;
 				break;
 
-			case MOD_LEVEL4_CRUSH:
+			case MOD_TYRANT_CRUSH:
 				message = G_( "%s ^7was crushed under %s%s^7's weight\n" );
 				break;
 
@@ -318,9 +318,9 @@ static void CG_Obituary( entityState_t *ent )
 				message = G_( "%s ^7should have used a medkit against %s%s^7's poison\n" );
 				break;
 
-			case MOD_LEVEL1_PCLOUD:
+			case MOD_BASILISK_PCLOUD:
 				message = G_( "%s ^7was gassed by %s%s^7's %s\n" );
-				attackerClass = PCL_ALIEN_LEVEL1;
+				attackerClass = PCL_ALIEN_BASILISK;
 				break;
 
 			case MOD_TELEFRAG:

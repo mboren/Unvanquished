@@ -876,8 +876,8 @@ void cancelBuildFire( gentity_t *ent )
 	if ( ent->client->ps.weapon == WP_ABUILD ||
 	     ent->client->ps.weapon == WP_ABUILD2 )
 	{
-		meleeAttack( ent, ABUILDER_CLAW_RANGE, ABUILDER_CLAW_WIDTH,
-		             ABUILDER_CLAW_WIDTH, ABUILDER_CLAW_DMG, MOD_ABUILDER_CLAW );
+		meleeAttack( ent, GRANGER_CLAW_RANGE, GRANGER_CLAW_WIDTH,
+		             GRANGER_CLAW_WIDTH, GRANGER_CLAW_DMG, MOD_GRANGER_CLAW );
 	}
 }
 
@@ -924,7 +924,7 @@ void slowBlobFire( gentity_t *ent )
 /*
 ======================================================================
 
-LEVEL0
+DRETCH
 
 ======================================================================
 */
@@ -938,7 +938,7 @@ qboolean CheckVenomAttack( gentity_t *ent )
 {
 	trace_t   tr;
 	gentity_t *traceEnt;
-	int       damage = LEVEL0_BITE_DMG;
+	int       damage = DRETCH_BITE_DMG;
 
 	if ( ent->client->ps.weaponTime )
 	{
@@ -949,8 +949,8 @@ qboolean CheckVenomAttack( gentity_t *ent )
 	AngleVectors( ent->client->ps.viewangles, forward, right, up );
 	CalcMuzzlePoint( ent, forward, right, up, muzzle );
 
-	G_WideTrace( &tr, ent, LEVEL0_BITE_RANGE, LEVEL0_BITE_WIDTH,
-	             LEVEL0_BITE_WIDTH, &traceEnt );
+	G_WideTrace( &tr, ent, DRETCH_BITE_RANGE, DRETCH_BITE_WIDTH,
+	             DRETCH_BITE_WIDTH, &traceEnt );
 
 	if ( traceEnt == NULL )
 	{
@@ -997,15 +997,15 @@ qboolean CheckVenomAttack( gentity_t *ent )
 	// send blood impact
 	WideBloodSpurt( ent, traceEnt, &tr );
 
-	G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_LEVEL0_BITE );
-	ent->client->ps.weaponTime += LEVEL0_BITE_REPEAT;
+	G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_DRETCH_BITE );
+	ent->client->ps.weaponTime += DRETCH_BITE_REPEAT;
 	return qtrue;
 }
 
 /*
 ======================================================================
 
-LEVEL1
+BASILISK
 
 ======================================================================
 */
@@ -1026,13 +1026,13 @@ void CheckGrabAttack( gentity_t *ent )
 
 	CalcMuzzlePoint( ent, forward, right, up, muzzle );
 
-	if ( ent->client->ps.weapon == WP_ALEVEL1 )
+	if ( ent->client->ps.weapon == WP_BASILISK )
 	{
-		VectorMA( muzzle, LEVEL1_GRAB_RANGE, forward, end );
+		VectorMA( muzzle, BASILISK_GRAB_RANGE, forward, end );
 	}
-	else if ( ent->client->ps.weapon == WP_ALEVEL1_UPG )
+	else if ( ent->client->ps.weapon == WP_BASILISK_UPG )
 	{
-		VectorMA( muzzle, LEVEL1_GRAB_U_RANGE, forward, end );
+		VectorMA( muzzle, BASILISK_GRAB_U_RANGE, forward, end );
 	}
 
 	trap_Trace( &tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT );
@@ -1072,21 +1072,21 @@ void CheckGrabAttack( gentity_t *ent )
 
 		traceEnt->client->ps.stats[ STAT_STATE ] |= SS_GRABBED;
 
-		if ( ent->client->ps.weapon == WP_ALEVEL1 )
+		if ( ent->client->ps.weapon == WP_BASILISK )
 		{
-			traceEnt->client->grabExpiryTime = level.time + LEVEL1_GRAB_TIME;
+			traceEnt->client->grabExpiryTime = level.time + BASILISK_GRAB_TIME;
 
 			// Update the last combat time.
-			ent->client->lastCombatTime = level.time + LEVEL1_GRAB_TIME;
-			traceEnt->client->lastCombatTime = level.time + LEVEL1_GRAB_TIME;
+			ent->client->lastCombatTime = level.time + BASILISK_GRAB_TIME;
+			traceEnt->client->lastCombatTime = level.time + BASILISK_GRAB_TIME;
 		}
-		else if ( ent->client->ps.weapon == WP_ALEVEL1_UPG )
+		else if ( ent->client->ps.weapon == WP_BASILISK_UPG )
 		{
-			traceEnt->client->grabExpiryTime = level.time + LEVEL1_GRAB_U_TIME;
+			traceEnt->client->grabExpiryTime = level.time + BASILISK_GRAB_U_TIME;
 
 			// Update the last combat time.
-			ent->client->lastCombatTime = level.time + LEVEL1_GRAB_TIME;
-			traceEnt->client->lastCombatTime = level.time + LEVEL1_GRAB_TIME;
+			ent->client->lastCombatTime = level.time + BASILISK_GRAB_TIME;
+			traceEnt->client->lastCombatTime = level.time + BASILISK_GRAB_TIME;
 		}
 	}
 }
@@ -1099,7 +1099,7 @@ poisonCloud
 void poisonCloud( gentity_t *ent )
 {
 	int       entityList[ MAX_GENTITIES ];
-	vec3_t    range = { LEVEL1_PCLOUD_RANGE, LEVEL1_PCLOUD_RANGE, LEVEL1_PCLOUD_RANGE };
+	vec3_t    range = { BASILISK_PCLOUD_RANGE, BASILISK_PCLOUD_RANGE, BASILISK_PCLOUD_RANGE };
 	vec3_t    mins, maxs;
 	int       i, num;
 	gentity_t *humanPlayer;
@@ -1108,7 +1108,7 @@ void poisonCloud( gentity_t *ent )
 	VectorAdd( ent->client->ps.origin, range, maxs );
 	VectorSubtract( ent->client->ps.origin, range, mins );
 
-	G_UnlaggedOn( ent, ent->client->ps.origin, LEVEL1_PCLOUD_RANGE );
+	G_UnlaggedOn( ent, ent->client->ps.origin, BASILISK_PCLOUD_RANGE );
 	num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
 
 	for ( i = 0; i < num; i++ )
@@ -1141,7 +1141,7 @@ void poisonCloud( gentity_t *ent )
 /*
 ======================================================================
 
-LEVEL2
+MARAUDER
 
 ======================================================================
 */
@@ -1158,9 +1158,9 @@ static void G_FindZapChainTargets( zap_t *zap )
 {
 	gentity_t *ent = zap->targets[ 0 ]; // the source
 	int       entityList[ MAX_GENTITIES ];
-	vec3_t    range = { LEVEL2_AREAZAP_CHAIN_RANGE,
-	                    LEVEL2_AREAZAP_CHAIN_RANGE,
-	                    LEVEL2_AREAZAP_CHAIN_RANGE
+	vec3_t    range = { MARAUDER_AREAZAP_CHAIN_RANGE,
+	                    MARAUDER_AREAZAP_CHAIN_RANGE,
+	                    MARAUDER_AREAZAP_CHAIN_RANGE
 	                  };
 	vec3_t    mins, maxs;
 	int       i, num;
@@ -1190,7 +1190,7 @@ static void G_FindZapChainTargets( zap_t *zap )
 		       ( enemy->s.eType == ET_BUILDABLE &&
 		         BG_Buildable( enemy->s.modelindex )->team == TEAM_HUMANS ) ) &&
 		     enemy->health > 0 && // only chain to living targets
-		     distance <= LEVEL2_AREAZAP_CHAIN_RANGE )
+		     distance <= MARAUDER_AREAZAP_CHAIN_RANGE )
 		{
 			// world-LOS check: trace against the world, ignoring other BODY entities
 			trap_Trace( &tr, ent->s.origin, NULL, NULL,
@@ -1201,7 +1201,7 @@ static void G_FindZapChainTargets( zap_t *zap )
 				zap->targets[ zap->numTargets ] = enemy;
 				zap->distances[ zap->numTargets ] = distance;
 
-				if ( ++zap->numTargets >= LEVEL2_AREAZAP_MAX_TARGETS )
+				if ( ++zap->numTargets >= MARAUDER_AREAZAP_MAX_TARGETS )
 				{
 					return;
 				}
@@ -1218,7 +1218,7 @@ G_UpdateZapEffect
 static void G_UpdateZapEffect( zap_t *zap )
 {
 	int i;
-	int entityNums[ LEVEL2_AREAZAP_MAX_TARGETS + 1 ];
+	int entityNums[ MARAUDER_AREAZAP_MAX_TARGETS + 1 ];
 
 	entityNums[ 0 ] = zap->creator->s.number;
 
@@ -1255,7 +1255,7 @@ static void G_CreateNewZap( gentity_t *creator, gentity_t *target )
 		}
 
 		zap->used = qtrue;
-		zap->timeToLive = LEVEL2_AREAZAP_TIME;
+		zap->timeToLive = MARAUDER_AREAZAP_TIME;
 
 		zap->creator = creator;
 		zap->targets[ 0 ] = target;
@@ -1265,19 +1265,19 @@ static void G_CreateNewZap( gentity_t *creator, gentity_t *target )
 		if ( target->health > 0 )
 		{
 			G_Damage( target, creator, creator, forward,
-			          target->s.origin, LEVEL2_AREAZAP_DMG,
+			          target->s.origin, MARAUDER_AREAZAP_DMG,
 			          DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
-			          MOD_LEVEL2_ZAP );
+			          MOD_MARAUDER_ZAP );
 
 			G_FindZapChainTargets( zap );
 
 			for ( i = 1; i < zap->numTargets; i++ )
 			{
 				G_Damage( zap->targets[ i ], target, zap->creator, forward, target->s.origin,
-				          LEVEL2_AREAZAP_DMG * ( 1 - powf( ( zap->distances[ i ] /
-				                                 LEVEL2_AREAZAP_CHAIN_RANGE ), LEVEL2_AREAZAP_CHAIN_FALLOFF ) ) + 1,
+				          MARAUDER_AREAZAP_DMG * ( 1 - powf( ( zap->distances[ i ] /
+				                                 MARAUDER_AREAZAP_CHAIN_RANGE ), MARAUDER_AREAZAP_CHAIN_FALLOFF ) ) + 1,
 				          DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
-				          MOD_LEVEL2_ZAP );
+				          MOD_MARAUDER_ZAP );
 			}
 		}
 
@@ -1384,7 +1384,7 @@ void areaZapFire( gentity_t *ent )
 	trace_t   tr;
 	gentity_t *traceEnt;
 
-	G_WideTrace( &tr, ent, LEVEL2_AREAZAP_RANGE, LEVEL2_AREAZAP_WIDTH, LEVEL2_AREAZAP_WIDTH, &traceEnt );
+	G_WideTrace( &tr, ent, MARAUDER_AREAZAP_RANGE, MARAUDER_AREAZAP_WIDTH, MARAUDER_AREAZAP_WIDTH, &traceEnt );
 
 	if ( traceEnt == NULL )
 	{
@@ -1402,7 +1402,7 @@ void areaZapFire( gentity_t *ent )
 /*
 ======================================================================
 
-LEVEL3
+DRAGOON
 
 ======================================================================
 */
@@ -1436,10 +1436,10 @@ qboolean CheckPounceAttack( gentity_t *ent )
 	CalcMuzzlePoint( ent, forward, right, up, muzzle );
 
 	// Trace from muzzle to see what we hit
-	pounceRange = ent->client->ps.weapon == WP_ALEVEL3 ? LEVEL3_POUNCE_RANGE :
-	              LEVEL3_POUNCE_UPG_RANGE;
-	G_WideTrace( &tr, ent, pounceRange, LEVEL3_POUNCE_WIDTH,
-	             LEVEL3_POUNCE_WIDTH, &traceEnt );
+	pounceRange = ent->client->ps.weapon == WP_DRAGOON ? DRAGOON_POUNCE_RANGE :
+	              DRAGOON_POUNCE_UPG_RANGE;
+	G_WideTrace( &tr, ent, pounceRange, DRAGOON_POUNCE_WIDTH,
+	             DRAGOON_POUNCE_WIDTH, &traceEnt );
 
 	if ( traceEnt == NULL )
 	{
@@ -1458,12 +1458,12 @@ qboolean CheckPounceAttack( gentity_t *ent )
 	}
 
 	// Deal damage
-	timeMax = ent->client->ps.weapon == WP_ALEVEL3 ? LEVEL3_POUNCE_TIME :
-	          LEVEL3_POUNCE_TIME_UPG;
-	damage = payload * LEVEL3_POUNCE_DMG / timeMax;
+	timeMax = ent->client->ps.weapon == WP_DRAGOON ? DRAGOON_POUNCE_TIME :
+	          DRAGOON_POUNCE_TIME_UPG;
+	damage = payload * DRAGOON_POUNCE_DMG / timeMax;
 	ent->client->pmext.pouncePayload = 0;
 	G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage,
-	          DAMAGE_NO_LOCDAMAGE, MOD_LEVEL3_POUNCE );
+	          DAMAGE_NO_LOCDAMAGE, MOD_DRAGOON_POUNCE );
 
 	return qtrue;
 }
@@ -1476,7 +1476,7 @@ void bounceBallFire( gentity_t *ent )
 /*
 ======================================================================
 
-LEVEL4
+TYRANT
 
 ======================================================================
 */
@@ -1527,13 +1527,13 @@ void G_ChargeAttack( gentity_t *ent, gentity_t *victim )
 
 	WideBloodSpurt( ent, victim, NULL );
 
-	damage = LEVEL4_TRAMPLE_DMG * ent->client->ps.stats[ STAT_MISC ] /
-	         LEVEL4_TRAMPLE_DURATION;
+	damage = TYRANT_TRAMPLE_DMG * ent->client->ps.stats[ STAT_MISC ] /
+	         TYRANT_TRAMPLE_DURATION;
 
 	G_Damage( victim, ent, ent, forward, victim->s.origin, damage,
-	          DAMAGE_NO_LOCDAMAGE, MOD_LEVEL4_TRAMPLE );
+	          DAMAGE_NO_LOCDAMAGE, MOD_TYRANT_TRAMPLE );
 
-	ent->client->ps.weaponTime += LEVEL4_TRAMPLE_REPEAT;
+	ent->client->ps.weaponTime += TYRANT_TRAMPLE_REPEAT;
 }
 
 /*
@@ -1561,7 +1561,7 @@ void G_CrushAttack( gentity_t *ent, gentity_t *victim )
 	// Deal velocity based damage to target
 	jump = BG_Class( ent->client->ps.stats[ STAT_CLASS ] )->jumpMagnitude;
 	damage = ( ent->client->pmext.fallVelocity + jump ) *
-	         -LEVEL4_CRUSH_DAMAGE_PER_V;
+	         -TYRANT_CRUSH_DAMAGE_PER_V;
 
 	if ( damage < 0 )
 	{
@@ -1570,10 +1570,10 @@ void G_CrushAttack( gentity_t *ent, gentity_t *victim )
 
 	// Players also get damaged periodically
 	if ( victim->client &&
-	     ent->client->lastCrushTime + LEVEL4_CRUSH_REPEAT < level.time )
+	     ent->client->lastCrushTime + TYRANT_CRUSH_REPEAT < level.time )
 	{
 		ent->client->lastCrushTime = level.time;
-		damage += LEVEL4_CRUSH_DAMAGE;
+		damage += TYRANT_CRUSH_DAMAGE;
 	}
 
 	if ( damage < 1 )
@@ -1584,7 +1584,7 @@ void G_CrushAttack( gentity_t *ent, gentity_t *victim )
 	// Crush the victim over a period of time
 	VectorSubtract( victim->s.origin, ent->client->ps.origin, dir );
 	G_Damage( victim, ent, ent, dir, victim->s.origin, damage,
-	          DAMAGE_NO_LOCDAMAGE, MOD_LEVEL4_CRUSH );
+	          DAMAGE_NO_LOCDAMAGE, MOD_TYRANT_CRUSH );
 }
 
 //======================================================================
@@ -1630,7 +1630,7 @@ void FireWeapon3( gentity_t *ent )
 	// fire the specific weapon
 	switch ( ent->s.weapon )
 	{
-		case WP_ALEVEL3_UPG:
+		case WP_DRAGOON_UPG:
 			bounceBallFire( ent );
 			break;
 
@@ -1665,7 +1665,7 @@ void FireWeapon2( gentity_t *ent )
 	// fire the specific weapon
 	switch ( ent->s.weapon )
 	{
-		case WP_ALEVEL1_UPG:
+		case WP_BASILISK_UPG:
 			poisonCloud( ent );
 			break;
 
@@ -1673,7 +1673,7 @@ void FireWeapon2( gentity_t *ent )
 			LCChargeFire( ent, qtrue );
 			break;
 
-		case WP_ALEVEL2_UPG:
+		case WP_MARAUDER_UPG:
 			areaZapFire( ent );
 			break;
 
@@ -1710,39 +1710,39 @@ void FireWeapon( gentity_t *ent )
 	// fire the specific weapon
 	switch ( ent->s.weapon )
 	{
-		case WP_ALEVEL1:
-			meleeAttack( ent, LEVEL1_CLAW_RANGE, LEVEL1_CLAW_WIDTH, LEVEL1_CLAW_WIDTH,
-			             LEVEL1_CLAW_DMG, MOD_LEVEL1_CLAW );
+		case WP_BASILISK:
+			meleeAttack( ent, BASILISK_CLAW_RANGE, BASILISK_CLAW_WIDTH, BASILISK_CLAW_WIDTH,
+			             BASILISK_CLAW_DMG, MOD_BASILISK_CLAW );
 			break;
 
-		case WP_ALEVEL1_UPG:
-			meleeAttack( ent, LEVEL1_CLAW_U_RANGE, LEVEL1_CLAW_WIDTH, LEVEL1_CLAW_WIDTH,
-			             LEVEL1_CLAW_DMG, MOD_LEVEL1_CLAW );
+		case WP_BASILISK_UPG:
+			meleeAttack( ent, BASILISK_CLAW_U_RANGE, BASILISK_CLAW_WIDTH, BASILISK_CLAW_WIDTH,
+			             BASILISK_CLAW_DMG, MOD_BASILISK_CLAW );
 			break;
 
-		case WP_ALEVEL3:
-			meleeAttack( ent, LEVEL3_CLAW_RANGE, LEVEL3_CLAW_WIDTH, LEVEL3_CLAW_WIDTH,
-			             LEVEL3_CLAW_DMG, MOD_LEVEL3_CLAW );
+		case WP_DRAGOON:
+			meleeAttack( ent, DRAGOON_CLAW_RANGE, DRAGOON_CLAW_WIDTH, DRAGOON_CLAW_WIDTH,
+			             DRAGOON_CLAW_DMG, MOD_DRAGOON_CLAW );
 			break;
 
-		case WP_ALEVEL3_UPG:
-			meleeAttack( ent, LEVEL3_CLAW_UPG_RANGE, LEVEL3_CLAW_WIDTH,
-			             LEVEL3_CLAW_WIDTH, LEVEL3_CLAW_DMG, MOD_LEVEL3_CLAW );
+		case WP_DRAGOON_UPG:
+			meleeAttack( ent, DRAGOON_CLAW_UPG_RANGE, DRAGOON_CLAW_WIDTH,
+			             DRAGOON_CLAW_WIDTH, DRAGOON_CLAW_DMG, MOD_DRAGOON_CLAW );
 			break;
 
-		case WP_ALEVEL2:
-			meleeAttack( ent, LEVEL2_CLAW_RANGE, LEVEL2_CLAW_WIDTH, LEVEL2_CLAW_WIDTH,
-			             LEVEL2_CLAW_DMG, MOD_LEVEL2_CLAW );
+		case WP_MARAUDER:
+			meleeAttack( ent, MARAUDER_CLAW_RANGE, MARAUDER_CLAW_WIDTH, MARAUDER_CLAW_WIDTH,
+			             MARAUDER_CLAW_DMG, MOD_MARAUDER_CLAW );
 			break;
 
-		case WP_ALEVEL2_UPG:
-			meleeAttack( ent, LEVEL2_CLAW_U_RANGE, LEVEL2_CLAW_WIDTH, LEVEL2_CLAW_WIDTH,
-			             LEVEL2_CLAW_DMG, MOD_LEVEL2_CLAW );
+		case WP_MARAUDER_UPG:
+			meleeAttack( ent, MARAUDER_CLAW_U_RANGE, MARAUDER_CLAW_WIDTH, MARAUDER_CLAW_WIDTH,
+			             MARAUDER_CLAW_DMG, MOD_MARAUDER_CLAW );
 			break;
 
-		case WP_ALEVEL4:
-			meleeAttack( ent, LEVEL4_CLAW_RANGE, LEVEL4_CLAW_WIDTH,
-			             LEVEL4_CLAW_HEIGHT, LEVEL4_CLAW_DMG, MOD_LEVEL4_CLAW );
+		case WP_TYRANT:
+			meleeAttack( ent, TYRANT_CLAW_RANGE, TYRANT_CLAW_WIDTH,
+			             TYRANT_CLAW_HEIGHT, TYRANT_CLAW_DMG, MOD_TYRANT_CLAW );
 			break;
 
 		case WP_BLASTER:

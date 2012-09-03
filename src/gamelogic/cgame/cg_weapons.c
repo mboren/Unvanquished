@@ -894,10 +894,10 @@ static qboolean CG_ParseWeaponFile( const char *filename, int weapon, weaponInfo
 													va( "%s_view_fire.md5anim", token2 ), qfalse, qfalse, qfalse );
 						break;
 						
-					case WP_ALEVEL1:
-					case WP_ALEVEL1_UPG:
-					case WP_ALEVEL2:
-					case WP_ALEVEL4:
+					case WP_BASILISK:
+					case WP_BASILISK_UPG:
+					case WP_MARAUDER:
+					case WP_TYRANT:
 						CG_RegisterWeaponAnimation( &wi->animations[ WANIM_ATTACK1 ],
 													va( "%s_view_fire.md5anim", token2 ), qfalse, qfalse, qfalse );
 						CG_RegisterWeaponAnimation( &wi->animations[ WANIM_ATTACK2 ],
@@ -912,7 +912,7 @@ static qboolean CG_ParseWeaponFile( const char *filename, int weapon, weaponInfo
 													va( "%s_view_fire6.md5anim", token2 ), qfalse, qfalse, qfalse );
 						break;
 						
-					case WP_ALEVEL2_UPG:
+					case WP_MARAUDER_UPG:
 						CG_RegisterWeaponAnimation( &wi->animations[ WANIM_ATTACK1 ],
 													va( "%s_view_fire.md5anim", token2 ), qfalse, qfalse, qfalse );
 						CG_RegisterWeaponAnimation( &wi->animations[ WANIM_ATTACK2 ],

@@ -642,6 +642,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define ALIEN_BUILDER_SCOREINC        AVM(100) // builders receive this many points every 10 seconds
 
 #define HUMAN_BUILDABLE_INACTIVE_TIME 90000
+#define ALIEN_BUILDABLE_INACTIVE_TIME 100000
 
 /*
  * Misc

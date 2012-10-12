@@ -195,7 +195,8 @@ struct gentity_s
 	gentity_t   *parentNode; // for creep and defence/spawn dependencies
 	gentity_t   *rangeMarker;
 	qboolean    active; // for power repeater, but could be useful elsewhere
-	qboolean    powered; // for human buildables
+	qboolean    powered; // for human buildables, has power; for alien buildables, has overmind
+	qboolean    hasCreep;
 	int         builtBy; // clientNum of person that built this
 	int         dcc; // number of controlling dccs
 	qboolean    spawned; // whether or not this buildable has finished spawning

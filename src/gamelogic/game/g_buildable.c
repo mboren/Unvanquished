@@ -931,6 +931,7 @@ void AGeneric_Die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, i
 	self->think = AGeneric_Blast;
 	self->s.eFlags &= ~EF_FIRING; //prevent any firing effects
 	self->powered = qfalse;
+	self->hasCreep = qfalse;
 
 	if ( self->spawned && damage < BG_Buildable( self->s.modelindex )->health )
 	{
@@ -955,25 +956,59 @@ Tests for creep and kills the buildable if there is none
 void AGeneric_CreepCheck( gentity_t *self )
 {
 	gentity_t *spawn;
+	qboolean  hadCreep;
 
 	spawn = self->parentNode;
+	hadCreep = self->hasCreep;
 
-	if ( !G_FindCreep( self ) )
+	// find if the buildable has creep
+	switch ( self->s.modelindex )
 	{
-		if ( spawn )
-		{
-			G_Damage( self, NULL, g_entities + spawn->killedBy, NULL, NULL,
-			          self->health, 0, MOD_NOCREEP );
-		}
-		else
-		{
-			G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
-		}
+	case BA_A_SPAWN:
+	case BA_A_OVERMIND:
+		self->hasCreep = self->powered;
+		break;
 
-		return;
+	default:
+		self->hasCreep = ( BG_Buildable( self->s.modelindex )->creepTest )
+		               ? G_FindCreep( self )
+		               : qtrue;
+		break;
 	}
 
-	G_CreepSlow( self );
+	if ( hadCreep != self->hasCreep )
+	{
+		// state change - reset (but check - count is used for timing when powered too)
+		if ( self->count < level.time )
+		{
+			self->count = level.time;
+		}
+	}
+
+	if ( !self->hasCreep )
+	{
+		// if the buildable hasn't been on creep for a while, destroy it
+		if ( self->count == 0 )
+		{
+			self->count = level.time;
+		}
+		else if ( ( level.time - self->count ) >= ALIEN_BUILDABLE_INACTIVE_TIME )
+		{
+			if ( spawn )
+			{
+				G_Damage( self, NULL, g_entities + spawn->killedBy, NULL, NULL,
+				          self->health, 0, MOD_NOCREEP );
+			}
+			else
+			{
+				G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
+			}
+		}
+	}
+	else
+	{
+		G_CreepSlow( self );
+	}
 }
 
 /*
@@ -1067,7 +1102,14 @@ void ASpawn_Think( gentity_t *self )
 		}
 	}
 
-	G_CreepSlow( self );
+	//G_CreepSlow( self );
+	AGeneric_Think( self );
+
+	if ( !self->hasCreep )
+	{
+		// we want to slow humans regardless, but it'll already be done if there's an overmind
+		G_CreepSlow( self );
+	}
 
 	self->nextthink = level.time + BG_Buildable( self->s.modelindex )->nextthink;
 }
@@ -1364,7 +1406,7 @@ void AAcidTube_Think( gentity_t *self )
 	VectorSubtract( self->s.origin, range, mins );
 
 	// attack nearby humans
-	if ( self->spawned && self->health > 0 && self->powered )
+	if ( self->spawned && self->health > 0 && self->powered && self->hasCreep )
 	{
 		num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
 
@@ -1478,7 +1520,7 @@ void AHive_Think( gentity_t *self )
 	}
 
 	// Find a target to attack
-	if ( self->spawned && !self->active && self->powered )
+	if ( self->spawned && !self->active && self->powered && self->hasCreep )
 	{
 		int    i, num, entityList[ MAX_GENTITIES ];
 		vec3_t mins, maxs,
@@ -1515,7 +1557,7 @@ pain function for Alien Hive
 */
 void AHive_Pain( gentity_t *self, gentity_t *attacker, int damage )
 {
-	if ( self->spawned && self->powered && !self->active )
+	if ( self->spawned && self->powered && self->hasCreep && !self->active )
 	{
 		AHive_CheckTarget( self, attacker );
 	}
@@ -1536,7 +1578,7 @@ void ABooster_Touch( gentity_t *self, gentity_t *other, trace_t *trace )
 {
 	gclient_t *client = other->client;
 
-	if ( !self->spawned || !self->powered || self->health <= 0 )
+	if ( !self->spawned || !self->powered || !self->hasCreep || self->health <= 0 )
 	{
 		return;
 	}
@@ -1756,7 +1798,7 @@ void ATrapper_Think( gentity_t *self )
 
 	AGeneric_Think( self );
 
-	if ( self->spawned && self->powered )
+	if ( self->spawned && self->powered && self->hasCreep )
 	{
 		//if the current target is not valid find a new one
 		if ( !ATrapper_CheckTarget( self, self->enemy, range ) )
@@ -3166,7 +3208,7 @@ void G_BuildableThink( gentity_t *ent, int msec )
 	// Set flags
 	ent->s.eFlags &= ~( EF_B_POWERED | EF_B_SPAWNED | EF_B_MARKED );
 
-	if ( ent->powered )
+	if ( ent->powered && ent->hasCreep )
 	{
 		ent->s.eFlags |= EF_B_POWERED;
 	}
@@ -4280,6 +4322,7 @@ static gentity_t *G_Build( gentity_t *builder, buildable_t buildable,
 			break;
 	}
 
+	built->hasCreep = qtrue;
 	built->r.contents = CONTENTS_BODY;
 	built->clipmask = MASK_PLAYERSOLID;
 	built->enemy = NULL;

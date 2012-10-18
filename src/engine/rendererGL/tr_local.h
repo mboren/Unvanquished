@@ -3336,6 +3336,7 @@ extern "C" {
 
 		char              name[ MAX_QPATH ]; // polyset name
 
+		char              shaderName[ MAX_QPATH ];
 		shader_t          *shader;
 
 		int               numVerts;
@@ -3615,17 +3616,22 @@ extern "C" {
 		md5Model_t  *md5; // only if type == MOD_MD5
 
 		int         numLods;
+		qboolean    cached;
 	} model_t;
 
 	void               R_ModelInit( void );
+	void               R_ShutdownModels( void );
 	model_t            *R_GetModelByHandle( qhandle_t hModel );
-
+	void               *R_ModelHunk_Alloc( int size );
+	void               R_CreateMDVVBOSurfaces( const char *modName, mdvModel_t *mdvModel );
+	void               R_CreateMD5VBOSurfaces( const char *modName, md5Model_t *md5 );
 	int                RE_LerpTagQ3A( orientation_t *tag, qhandle_t handle, int startFrame, int endFrame, float frac, const char *tagNameIn );
 	int                RE_LerpTagET( orientation_t *tag, const refEntity_t *refent, const char *tagNameIn, int startIndex );
 
 	int                RE_BoneIndex( qhandle_t hModel, const char *boneName );
 
 	void               R_ModelBounds( qhandle_t handle, vec3_t mins, vec3_t maxs );
+	void               R_BackupModels( void );
 
 	void               R_Modellist_f( void );
 

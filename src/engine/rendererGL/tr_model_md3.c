@@ -26,6 +26,264 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define LL(x) x = LittleLong(x)
 #define LF(x) x = LittleFloat(x)
 
+// create VBO surfaces from mdv surfaces
+void R_CreateMDVVBOSurfaces( const char *modName, mdvModel_t *mdvModel )
+{
+	mdvNormTanBi_t  *vertexes;
+	mdvNormTanBi_t  *vert;
+	mdvSurface_t    *surf;
+	srfTriangle_t   *tri;
+	growList_t      vboSurfaces;
+	srfVBOMDVMesh_t *vboSurf;
+
+	byte            *data;
+	int             dataSize;
+	int             dataOfs;
+
+	vec4_t          tmp;
+
+	GLuint          ofsTexCoords;
+	GLuint          ofsTangents;
+	GLuint          ofsBinormals;
+	GLuint          ofsNormals;
+
+	GLuint          sizeXYZ = 0;
+	GLuint          sizeTangents = 0;
+	GLuint          sizeBinormals = 0;
+	GLuint          sizeNormals = 0;
+
+	int             vertexesNum;
+	int             i, j, k, f;
+
+	Com_InitGrowList( &vboSurfaces, 10 );
+
+	for ( i = 0, surf = mdvModel->surfaces; i < mdvModel->numSurfaces; i++, surf++ )
+	{
+		//allocate temp memory for vertex data
+		vertexes = ( mdvNormTanBi_t* )ri.Hunk_AllocateTempMemory( sizeof( *vertexes ) * surf->numVerts * mdvModel->numFrames );
+
+		// calc tangent spaces
+		{
+			const float *v0, *v1, *v2;
+			const float *t0, *t1, *t2;
+			vec3_t      tangent;
+			vec3_t      binormal;
+			vec3_t      normal;
+
+			for ( j = 0, vert = vertexes; j < ( surf->numVerts * mdvModel->numFrames ); j++, vert++ )
+			{
+				VectorClear( vert->tangent );
+				VectorClear( vert->binormal );
+				VectorClear( vert->normal );
+			}
+
+			for ( f = 0; f < mdvModel->numFrames; f++ )
+			{
+				for ( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
+				{
+					v0 = surf->verts[ surf->numVerts * f + tri->indexes[ 0 ] ].xyz;
+					v1 = surf->verts[ surf->numVerts * f + tri->indexes[ 1 ] ].xyz;
+					v2 = surf->verts[ surf->numVerts * f + tri->indexes[ 2 ] ].xyz;
+
+					t0 = surf->st[ tri->indexes[ 0 ] ].st;
+					t1 = surf->st[ tri->indexes[ 1 ] ].st;
+					t2 = surf->st[ tri->indexes[ 2 ] ].st;
+
+#if 1
+					R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
+#else
+					R_CalcNormalForTriangle( normal, v0, v1, v2 );
+					R_CalcTangentsForTriangle( tangent, binormal, v0, v1, v2, t0, t1, t2 );
+#endif
+
+					for ( k = 0; k < 3; k++ )
+					{
+						float *v;
+
+						v = vertexes[ surf->numVerts * f + tri->indexes[ k ] ].tangent;
+						VectorAdd( v, tangent, v );
+
+						v = vertexes[ surf->numVerts * f + tri->indexes[ k ] ].binormal;
+						VectorAdd( v, binormal, v );
+
+						v = vertexes[ surf->numVerts * f + tri->indexes[ k ] ].normal;
+						VectorAdd( v, normal, v );
+					}
+				}
+			}
+
+			for ( j = 0, vert = vertexes; j < ( surf->numVerts * mdvModel->numFrames ); j++, vert++ )
+			{
+				VectorNormalize( vert->tangent );
+				VectorNormalize( vert->binormal );
+				VectorNormalize( vert->normal );
+			}
+		}
+
+		//ri.Printf(PRINT_ALL, "...calculating MD3 mesh VBOs ( '%s', %i verts %i tris )\n", surf->name, surf->numVerts, surf->numTriangles);
+
+		// create surface
+		vboSurf = ( srfVBOMDVMesh_t * ) ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
+		Com_AddToGrowList( &vboSurfaces, vboSurf );
+
+		vboSurf->surfaceType = SF_VBO_MDVMESH;
+		vboSurf->mdvModel = mdvModel;
+		vboSurf->mdvSurface = surf;
+		vboSurf->numIndexes = surf->numTriangles * 3;
+		vboSurf->numVerts = surf->numVerts;
+
+		/*
+		vboSurf->vbo = R_CreateVBO2(va("staticWorldMesh_vertices %i", vboSurfaces.currentElements), numVerts, optimizedVerts,
+			                                                ATTR_POSITION | ATTR_TEXCOORD | ATTR_LIGHTCOORD | ATTR_TANGENT | ATTR_BINORMAL | ATTR_NORMAL
+			                                                | ATTR_COLOR);
+			                                                */
+
+		vboSurf->ibo = R_CreateIBO2( va( "staticMD3Mesh_IBO %s", surf->name ), surf->numTriangles, surf->triangles, VBO_USAGE_STATIC );
+
+		vertexesNum = surf->numVerts;
+
+		//allocate vbo data
+		dataSize = ( surf->numVerts * mdvModel->numFrames * sizeof( vec4_t ) * 4 ) +  // xyz, tangent, binormal, normal
+			        ( surf->numVerts * sizeof( vec4_t ) );  // texcoords
+
+		data = ( byte * ) ri.Hunk_AllocateTempMemory( dataSize );
+		dataOfs = 0;
+
+		// feed vertex XYZ
+		for ( f = 0; f < mdvModel->numFrames; f++ )
+		{
+			for ( j = 0; j < vertexesNum; j++ )
+			{
+				for ( k = 0; k < 3; k++ )
+				{
+					tmp[ k ] = surf->verts[ f * vertexesNum + j ].xyz[ k ];
+				}
+
+				tmp[ 3 ] = 1;
+				Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
+				dataOfs += sizeof( vec4_t );
+			}
+
+			if ( f == 0 )
+			{
+				sizeXYZ = dataOfs;
+			}
+		}
+
+		// feed vertex texcoords
+		ofsTexCoords = dataOfs;
+
+		for ( j = 0; j < vertexesNum; j++ )
+		{
+			for ( k = 0; k < 2; k++ )
+			{
+				tmp[ k ] = surf->st[ j ].st[ k ];
+			}
+
+			tmp[ 2 ] = 0;
+			tmp[ 3 ] = 1;
+			Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
+			dataOfs += sizeof( vec4_t );
+		}
+
+		// feed vertex tangents
+		ofsTangents = dataOfs;
+
+		for ( f = 0; f < mdvModel->numFrames; f++ )
+		{
+			for ( j = 0; j < vertexesNum; j++ )
+			{
+				for ( k = 0; k < 3; k++ )
+				{
+					tmp[ k ] = vertexes[ f * vertexesNum + j ].tangent[ k ];
+				}
+
+				tmp[ 3 ] = 1;
+				Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
+				dataOfs += sizeof( vec4_t );
+			}
+
+			if ( f == 0 )
+			{
+				sizeTangents = dataOfs - ofsTangents;
+			}
+		}
+
+		// feed vertex binormals
+		ofsBinormals = dataOfs;
+
+		for ( f = 0; f < mdvModel->numFrames; f++ )
+		{
+			for ( j = 0; j < vertexesNum; j++ )
+			{
+				for ( k = 0; k < 3; k++ )
+				{
+					tmp[ k ] = vertexes[ f * vertexesNum + j ].binormal[ k ];
+				}
+
+				tmp[ 3 ] = 1;
+				Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
+				dataOfs += sizeof( vec4_t );
+			}
+
+			if ( f == 0 )
+			{
+				sizeBinormals = dataOfs - ofsBinormals;
+			}
+		}
+
+		// feed vertex normals
+		ofsNormals = dataOfs;
+
+		for ( f = 0; f < mdvModel->numFrames; f++ )
+		{
+			for ( j = 0; j < vertexesNum; j++ )
+			{
+				for ( k = 0; k < 3; k++ )
+				{
+					tmp[ k ] = vertexes[ f * vertexesNum + j ].normal[ k ];
+				}
+
+				tmp[ 3 ] = 1;
+				Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
+				dataOfs += sizeof( vec4_t );
+			}
+
+			if ( f == 0 )
+			{
+				sizeNormals = dataOfs - ofsNormals;
+			}
+		}
+
+		vboSurf->vbo = R_CreateVBO( va( "staticMD3Mesh_VBO '%s'", surf->name ), data, dataSize, VBO_USAGE_STATIC );
+		vboSurf->vbo->ofsXYZ = 0;
+		vboSurf->vbo->ofsTexCoords = ofsTexCoords;
+		vboSurf->vbo->ofsLightCoords = ofsTexCoords;
+		vboSurf->vbo->ofsTangents = ofsTangents;
+		vboSurf->vbo->ofsBinormals = ofsBinormals;
+		vboSurf->vbo->ofsNormals = ofsNormals;
+
+		vboSurf->vbo->sizeXYZ = sizeXYZ;
+		vboSurf->vbo->sizeTangents = sizeTangents;
+		vboSurf->vbo->sizeBinormals = sizeBinormals;
+		vboSurf->vbo->sizeNormals = sizeNormals;
+
+		ri.Hunk_FreeTempMemory( data );
+		ri.Hunk_FreeTempMemory( vertexes );
+	}
+
+	// move VBO surfaces list to hunk
+	mdvModel->numVBOSurfaces = vboSurfaces.currentElements;
+	mdvModel->vboSurfaces = ( srfVBOMDVMesh_t ** ) ri.Hunk_Alloc( mdvModel->numVBOSurfaces * sizeof( *mdvModel->vboSurfaces ), h_low );
+
+	for ( i = 0; i < mdvModel->numVBOSurfaces; i++ )
+	{
+		mdvModel->vboSurfaces[ i ] = ( srfVBOMDVMesh_t * ) Com_GrowListElement( &vboSurfaces, i );
+	}
+
+	Com_DestroyGrowList( &vboSurfaces );
+}
+
 /*
 =================
 MDXSurfaceCompare
@@ -63,7 +321,7 @@ R_LoadMD3
 */
 qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const char *modName )
 {
-	int            i, j, k; //, l;
+	int            i, j;
 
 	md3Header_t    *md3Model;
 	md3Frame_t     *md3Frame;
@@ -99,7 +357,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 	mod->type = MOD_MESH;
 	size = LittleLong( md3Model->ofsEnd );
 	mod->dataSize += size;
-	mdvModel = mod->mdv[ lod ] = ri.Hunk_Alloc( sizeof( mdvModel_t ), h_low );
+	mdvModel = mod->mdv[ lod ] = R_ModelHunk_Alloc( sizeof( mdvModel_t ) );
 
 //  Com_Memcpy(mod->md3[lod], buffer, LittleLong(md3Model->ofsEnd));
 
@@ -121,7 +379,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 
 	// swap all the frames
 	mdvModel->numFrames = md3Model->numFrames;
-	mdvModel->frames = frame = ri.Hunk_Alloc( sizeof( *frame ) * md3Model->numFrames, h_low );
+	mdvModel->frames = frame = R_ModelHunk_Alloc( sizeof( *frame ) * md3Model->numFrames );
 
 	md3Frame = ( md3Frame_t * )( ( byte * ) md3Model + md3Model->ofsFrames );
 
@@ -139,7 +397,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 
 	// swap all the tags
 	mdvModel->numTags = md3Model->numTags;
-	mdvModel->tags = tag = ri.Hunk_Alloc( sizeof( *tag ) * ( md3Model->numTags * md3Model->numFrames ), h_low );
+	mdvModel->tags = tag = R_ModelHunk_Alloc( sizeof( *tag ) * ( md3Model->numTags * md3Model->numFrames ) );
 
 	md3Tag = ( md3Tag_t * )( ( byte * ) md3Model + md3Model->ofsTags );
 
@@ -154,7 +412,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 		}
 	}
 
-	mdvModel->tagNames = tagName = ri.Hunk_Alloc( sizeof( *tagName ) * ( md3Model->numTags ), h_low );
+	mdvModel->tagNames = tagName = R_ModelHunk_Alloc( sizeof( *tagName ) * ( md3Model->numTags ) );
 
 	md3Tag = ( md3Tag_t * )( ( byte * ) md3Model + md3Model->ofsTags );
 
@@ -165,7 +423,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 
 	// swap all the surfaces
 	mdvModel->numSurfaces = md3Model->numSurfaces;
-	mdvModel->surfaces = surf = ri.Hunk_Alloc( sizeof( *surf ) * md3Model->numSurfaces, h_low );
+	mdvModel->surfaces = surf = R_ModelHunk_Alloc( sizeof( *surf ) * md3Model->numSurfaces );
 
 	md3Surf = ( md3Surface_t * )( ( byte * ) md3Model + md3Model->ofsSurfaces );
 
@@ -220,7 +478,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 
 		/*
 		   surf->numShaders = md3Surf->numShaders;
-		   surf->shaders = shader = ri.Hunk_Alloc(sizeof(*shader) * md3Surf->numShaders, h_low);
+		   surf->shaders = shader = R_ModelHunk_Alloc(sizeof(*shader) * md3Surf->numShaders, h_low);
 
 		   md3Shader = (md3Shader_t *) ((byte *) md3Surf + md3Surf->ofsShaders);
 		   for(j = 0; j < md3Surf->numShaders; j++, shader++, md3Shader++)
@@ -242,10 +500,11 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 		// only consider the first shader
 		md3Shader = ( md3Shader_t * )( ( byte * ) md3Surf + md3Surf->ofsShaders );
 		surf->shader = R_FindShader( md3Shader->name, SHADER_3D_DYNAMIC, qtrue );
+		Q_strncpyz( surf->shaderName, md3Shader->name, sizeof( surf->shaderName ) );
 
 		// swap all the triangles
 		surf->numTriangles = md3Surf->numTriangles;
-		surf->triangles = tri = ri.Hunk_Alloc( sizeof( *tri ) * md3Surf->numTriangles, h_low );
+		surf->triangles = tri = R_ModelHunk_Alloc( sizeof( *tri ) * md3Surf->numTriangles );
 
 		md3Tri = ( md3Triangle_t * )( ( byte * ) md3Surf + md3Surf->ofsTriangles );
 
@@ -258,7 +517,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 
 		// swap all the XyzNormals
 		surf->numVerts = md3Surf->numVerts;
-		surf->verts = v = ri.Hunk_Alloc( sizeof( *v ) * ( md3Surf->numVerts * md3Surf->numFrames ), h_low );
+		surf->verts = v = R_ModelHunk_Alloc( sizeof( *v ) * ( md3Surf->numVerts * md3Surf->numFrames ) );
 
 		md3xyz = ( md3XyzNormal_t * )( ( byte * ) md3Surf + md3Surf->ofsXyzNormals );
 
@@ -270,7 +529,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 		}
 
 		// swap all the ST
-		surf->st = st = ri.Hunk_Alloc( sizeof( *st ) * md3Surf->numVerts, h_low );
+		surf->st = st = R_ModelHunk_Alloc( sizeof( *st ) * md3Surf->numVerts );
 
 		md3st = ( md3St_t * )( ( byte * ) md3Surf + md3Surf->ofsSt );
 
@@ -285,263 +544,7 @@ qboolean R_LoadMD3( model_t *mod, int lod, void *buffer, int bufferSize, const c
 		surf++;
 	}
 
-#if 1
-	// create VBO surfaces from md3 surfaces
-	{
-		mdvNormTanBi_t  *vertexes;
-		mdvNormTanBi_t  *vert;
-
-		growList_t      vboSurfaces;
-		srfVBOMDVMesh_t *vboSurf;
-
-		byte            *data;
-		int             dataSize;
-		int             dataOfs;
-
-		vec4_t          tmp;
-
-		GLuint          ofsTexCoords;
-		GLuint          ofsTangents;
-		GLuint          ofsBinormals;
-		GLuint          ofsNormals;
-
-		GLuint          sizeXYZ = 0;
-		GLuint          sizeTangents = 0;
-		GLuint          sizeBinormals = 0;
-		GLuint          sizeNormals = 0;
-
-		int             vertexesNum;
-		int             f;
-
-		Com_InitGrowList( &vboSurfaces, 10 );
-
-		for ( i = 0, surf = mdvModel->surfaces; i < mdvModel->numSurfaces; i++, surf++ )
-		{
-			//allocate temp memory for vertex data
-			vertexes = (mdvNormTanBi_t*)ri.Hunk_AllocateTempMemory( sizeof( *vertexes ) * surf->numVerts * mdvModel->numFrames );
-
-			// calc tangent spaces
-			{
-				const float *v0, *v1, *v2;
-				const float *t0, *t1, *t2;
-				vec3_t      tangent;
-				vec3_t      binormal;
-				vec3_t      normal;
-
-				for ( j = 0, vert = vertexes; j < ( surf->numVerts * mdvModel->numFrames ); j++, vert++ )
-				{
-					VectorClear( vert->tangent );
-					VectorClear( vert->binormal );
-					VectorClear( vert->normal );
-				}
-
-				for ( f = 0; f < mdvModel->numFrames; f++ )
-				{
-					for ( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
-					{
-						v0 = surf->verts[ surf->numVerts * f + tri->indexes[ 0 ] ].xyz;
-						v1 = surf->verts[ surf->numVerts * f + tri->indexes[ 1 ] ].xyz;
-						v2 = surf->verts[ surf->numVerts * f + tri->indexes[ 2 ] ].xyz;
-
-						t0 = surf->st[ tri->indexes[ 0 ] ].st;
-						t1 = surf->st[ tri->indexes[ 1 ] ].st;
-						t2 = surf->st[ tri->indexes[ 2 ] ].st;
-
-#if 1
-						R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
-#else
-						R_CalcNormalForTriangle( normal, v0, v1, v2 );
-						R_CalcTangentsForTriangle( tangent, binormal, v0, v1, v2, t0, t1, t2 );
-#endif
-
-						for ( k = 0; k < 3; k++ )
-						{
-							float *v;
-
-							v = vertexes[ surf->numVerts * f + tri->indexes[ k ] ].tangent;
-							VectorAdd( v, tangent, v );
-
-							v = vertexes[ surf->numVerts * f + tri->indexes[ k ] ].binormal;
-							VectorAdd( v, binormal, v );
-
-							v = vertexes[ surf->numVerts * f + tri->indexes[ k ] ].normal;
-							VectorAdd( v, normal, v );
-						}
-					}
-				}
-
-				for ( j = 0, vert = vertexes; j < ( surf->numVerts * mdvModel->numFrames ); j++, vert++ )
-				{
-					VectorNormalize( vert->tangent );
-					VectorNormalize( vert->binormal );
-					VectorNormalize( vert->normal );
-				}
-			}
-
-			//ri.Printf(PRINT_ALL, "...calculating MD3 mesh VBOs ( '%s', %i verts %i tris )\n", surf->name, surf->numVerts, surf->numTriangles);
-
-			// create surface
-			vboSurf = ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
-			Com_AddToGrowList( &vboSurfaces, vboSurf );
-
-			vboSurf->surfaceType = SF_VBO_MDVMESH;
-			vboSurf->mdvModel = mdvModel;
-			vboSurf->mdvSurface = surf;
-			vboSurf->numIndexes = surf->numTriangles * 3;
-			vboSurf->numVerts = surf->numVerts;
-
-			/*
-			vboSurf->vbo = R_CreateVBO2(va("staticWorldMesh_vertices %i", vboSurfaces.currentElements), numVerts, optimizedVerts,
-			                                                   ATTR_POSITION | ATTR_TEXCOORD | ATTR_LIGHTCOORD | ATTR_TANGENT | ATTR_BINORMAL | ATTR_NORMAL
-			                                                   | ATTR_COLOR);
-			                                                   */
-
-			vboSurf->ibo = R_CreateIBO2( va( "staticMD3Mesh_IBO %s", surf->name ), surf->numTriangles, surf->triangles, VBO_USAGE_STATIC );
-
-			vertexesNum = surf->numVerts;
-
-			//allocate vbo data
-			dataSize = ( surf->numVerts * mdvModel->numFrames * sizeof( vec4_t ) * 4 ) +  // xyz, tangent, binormal, normal
-			           ( surf->numVerts * sizeof( vec4_t ) );  // texcoords
-
-			data = ri.Hunk_AllocateTempMemory( dataSize );
-			dataOfs = 0;
-
-			// feed vertex XYZ
-			for ( f = 0; f < mdvModel->numFrames; f++ )
-			{
-				for ( j = 0; j < vertexesNum; j++ )
-				{
-					for ( k = 0; k < 3; k++ )
-					{
-						tmp[ k ] = surf->verts[ f * vertexesNum + j ].xyz[ k ];
-					}
-
-					tmp[ 3 ] = 1;
-					Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
-					dataOfs += sizeof( vec4_t );
-				}
-
-				if ( f == 0 )
-				{
-					sizeXYZ = dataOfs;
-				}
-			}
-
-			// feed vertex texcoords
-			ofsTexCoords = dataOfs;
-
-			for ( j = 0; j < vertexesNum; j++ )
-			{
-				for ( k = 0; k < 2; k++ )
-				{
-					tmp[ k ] = surf->st[ j ].st[ k ];
-				}
-
-				tmp[ 2 ] = 0;
-				tmp[ 3 ] = 1;
-				Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
-				dataOfs += sizeof( vec4_t );
-			}
-
-			// feed vertex tangents
-			ofsTangents = dataOfs;
-
-			for ( f = 0; f < mdvModel->numFrames; f++ )
-			{
-				for ( j = 0; j < vertexesNum; j++ )
-				{
-					for ( k = 0; k < 3; k++ )
-					{
-						tmp[ k ] = vertexes[ f * vertexesNum + j ].tangent[ k ];
-					}
-
-					tmp[ 3 ] = 1;
-					Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
-					dataOfs += sizeof( vec4_t );
-				}
-
-				if ( f == 0 )
-				{
-					sizeTangents = dataOfs - ofsTangents;
-				}
-			}
-
-			// feed vertex binormals
-			ofsBinormals = dataOfs;
-
-			for ( f = 0; f < mdvModel->numFrames; f++ )
-			{
-				for ( j = 0; j < vertexesNum; j++ )
-				{
-					for ( k = 0; k < 3; k++ )
-					{
-						tmp[ k ] = vertexes[ f * vertexesNum + j ].binormal[ k ];
-					}
-
-					tmp[ 3 ] = 1;
-					Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
-					dataOfs += sizeof( vec4_t );
-				}
-
-				if ( f == 0 )
-				{
-					sizeBinormals = dataOfs - ofsBinormals;
-				}
-			}
-
-			// feed vertex normals
-			ofsNormals = dataOfs;
-
-			for ( f = 0; f < mdvModel->numFrames; f++ )
-			{
-				for ( j = 0; j < vertexesNum; j++ )
-				{
-					for ( k = 0; k < 3; k++ )
-					{
-						tmp[ k ] = vertexes[ f * vertexesNum + j ].normal[ k ];
-					}
-
-					tmp[ 3 ] = 1;
-					Com_Memcpy( data + dataOfs, ( vec_t * ) tmp, sizeof( vec4_t ) );
-					dataOfs += sizeof( vec4_t );
-				}
-
-				if ( f == 0 )
-				{
-					sizeNormals = dataOfs - ofsNormals;
-				}
-			}
-
-			vboSurf->vbo = R_CreateVBO( va( "staticMD3Mesh_VBO '%s'", surf->name ), data, dataSize, VBO_USAGE_STATIC );
-			vboSurf->vbo->ofsXYZ = 0;
-			vboSurf->vbo->ofsTexCoords = ofsTexCoords;
-			vboSurf->vbo->ofsLightCoords = ofsTexCoords;
-			vboSurf->vbo->ofsTangents = ofsTangents;
-			vboSurf->vbo->ofsBinormals = ofsBinormals;
-			vboSurf->vbo->ofsNormals = ofsNormals;
-
-			vboSurf->vbo->sizeXYZ = sizeXYZ;
-			vboSurf->vbo->sizeTangents = sizeTangents;
-			vboSurf->vbo->sizeBinormals = sizeBinormals;
-			vboSurf->vbo->sizeNormals = sizeNormals;
-
-			ri.Hunk_FreeTempMemory( data );
-			ri.Hunk_FreeTempMemory( vertexes );
-		}
-
-		// move VBO surfaces list to hunk
-		mdvModel->numVBOSurfaces = vboSurfaces.currentElements;
-		mdvModel->vboSurfaces = ri.Hunk_Alloc( mdvModel->numVBOSurfaces * sizeof( *mdvModel->vboSurfaces ), h_low );
-
-		for ( i = 0; i < mdvModel->numVBOSurfaces; i++ )
-		{
-			mdvModel->vboSurfaces[ i ] = ( srfVBOMDVMesh_t * ) Com_GrowListElement( &vboSurfaces, i );
-		}
-
-		Com_DestroyGrowList( &vboSurfaces );
-	}
-#endif
+	R_CreateMDVVBOSurfaces( mod->name, mdvModel );
 
 	return qtrue;
 }

@@ -80,6 +80,178 @@ model_t        *R_AllocModel( void )
 	return mod;
 }
 
+//---------------------------------------------------------------------------
+// Virtual Memory, used for model caching, since we can't allocate them
+// in the main Hunk (since it gets cleared on level changes), and they're
+// too large to go into the Zone, we have a special memory chunk just for
+// caching models in between levels.
+//
+// Optimized for Win32 systems, so that they'll grow the swapfile at startup
+// if needed, but won't actually commit it until it's needed.
+//
+// GOAL: reserve a big chunk of virtual memory for the media cache, and only
+// use it when we actually need it. This will make sure the swap file grows
+// at startup if needed, rather than each allocation we make.
+byte *membase = NULL;
+int  hunkmaxsize;
+int  cursize;
+
+#define R_HUNK_MEGS 64
+#define R_HUNK_SIZE ( R_HUNK_MEGS*1024*1024 )
+
+void *R_ModelHunk_Begin( void )
+{
+	int maxsize = R_HUNK_SIZE;
+
+	if ( !membase )
+	{
+		// reserve a huge chunk of memory, but don't commit any yet
+		cursize = 0;
+		hunkmaxsize = maxsize;
+
+		membase = ( byte* )malloc( maxsize );
+
+		if ( !membase )
+		{
+			ri.Error( ERR_DROP, "R_ModelHunk_Begin: reserve failed" );
+		}
+
+		memset( membase, 0, maxsize );
+	}
+
+	return ( void * ) membase;
+}
+
+void *R_ModelHunk_Alloc( int size )
+{
+	// round to cacheline
+	size = ( size + 31 ) & ~31;
+
+	cursize += size;
+
+	if ( cursize > hunkmaxsize )
+	{
+		ri.Error( ERR_DROP, "R_ModelHunk_Alloc overflow" );
+	}
+
+	return ( void * )( membase + cursize - size );
+}
+
+// this is only called when we shutdown GL
+void R_ModelHunk_End( void )
+{
+	if ( membase )
+	{
+		free( membase );
+	}
+
+	membase = NULL;
+}
+
+static model_t backupModels[ MAX_MOD_KNOWN ];
+static int     numBackupModels = 0;
+
+/*
+===============
+R_BackupModels
+===============
+*/
+void R_BackupModels( void )
+{
+	int     i;
+	model_t *mod, *modBack;
+
+	// copy each model in memory across to the backupModels
+	// this only works because any pointers were allocated
+	// with the presistant model hunk memory system instead of the main hunk
+	modBack = backupModels;
+
+	for ( i = 0; i < tr.numModels; i++ )
+	{
+		mod = tr.models[ i ];
+
+		if ( !mod->cached && ( mod->type == MOD_MESH || mod->type == MOD_MD5 ) )
+		{
+			memcpy( modBack, mod, sizeof( *mod ) );
+			modBack->cached = qtrue;
+			modBack++;
+			numBackupModels++;
+		}
+	}
+}
+
+qboolean R_FindCachedModel( const char *name, model_t *newmod )
+{
+	int i;
+	int j;
+	int k;
+
+	for ( i = 0; i < numBackupModels; i++ )
+	{
+		model_t *modBack = &backupModels[ i ];
+
+		if ( !Q_stricmp( modBack->name, name ) )
+		{
+			mdvModel_t *mdv;
+			md5Model_t *md5;
+
+			// RE_RegisterModel will have assigned a new handle, so keep it
+			qhandle_t handle = newmod->index;
+
+			// copy over the model_t struct
+			memcpy( newmod, modBack, sizeof( model_t ) );
+			newmod->index = handle;
+
+			switch( newmod->type )
+			{
+				// register the shaders and create the vbo surfaces which are lost on each map load
+				case MOD_MESH:
+					for ( j = 0; j < newmod->numLods; j++ )
+					{
+						mdv = newmod->mdv[ j ];
+						for ( k = 0; k < mdv->numSurfaces; k++ )
+						{
+							mdvSurface_t *surf = &mdv->surfaces[ k ];
+							surf->shader = R_FindShader( surf->shaderName, SHADER_3D_DYNAMIC, qtrue );
+						}
+						R_CreateMDVVBOSurfaces( newmod->name, mdv );
+					}
+
+					break;
+				case MOD_MD5:
+					md5 = newmod->md5;
+
+					for ( k = 0; k < md5->numSurfaces; k++ )
+					{
+						md5Surface_t *surf = &md5->surfaces[ k ];
+						shader_t *sh;
+						sh = R_FindShader( surf->shader, SHADER_3D_DYNAMIC, qtrue );
+
+						if ( sh->defaultShader )
+						{
+							surf->shaderIndex = 0;
+						}
+						else
+						{
+							surf->shaderIndex = sh->index;
+						}
+					}
+
+					R_CreateMD5VBOSurfaces( newmod->name, md5 );
+					break;
+				default:
+					break;
+			}
+
+			// make sure the VBO glState entries are save
+			R_BindNullVBO();
+			R_BindNullIBO();
+			return qtrue;
+		}
+	}
+	return qfalse;
+}
+
 /*
 ====================
 RE_RegisterModel
@@ -143,6 +315,11 @@ qhandle_t RE_RegisterModel( const char *name )
 
 	// make sure the render thread is stopped
 	R_SyncRenderThread();
+
+	if ( R_FindCachedModel( name, mod ) )
+	{
+		return mod->index;
+	}
 
 	mod->numLods = 0;
 
@@ -554,6 +731,14 @@ void R_ModelInit( void )
 
 	mod = R_AllocModel();
 	mod->type = MOD_BAD;
+
+	R_ModelHunk_Begin();
+}
+
+void R_ShutdownModels( void )
+{
+	R_ModelHunk_End();
+	numBackupModels = 0;
 }
 
 /*
@@ -636,10 +821,9 @@ void R_Modellist_f( void )
 		totalDataSize += mod->dataSize;
 	}
 
-	ri.Printf( PRINT_ALL, " %d.%02d MB total model memory\n", totalDataSize / ( 1024 * 1024 ),
-	           ( totalDataSize % ( 1024 * 1024 ) ) * 100 / ( 1024 * 1024 ) );
+	ri.Printf( PRINT_ALL, " %d.%02d MB total model memory\n", cursize / ( 1024 * 1024 ),
+	           ( cursize % ( 1024 * 1024 ) ) * 100 / ( 1024 * 1024 ) );
 	ri.Printf( PRINT_ALL, " %i total models\n\n", total );
-
 #if     0 // not working right with new hunk
 
 	if ( tr.world )
@@ -807,7 +991,6 @@ int RE_LerpTagET( orientation_t *tag, const refEntity_t *refent, const char *tag
 
 	                // failed
 	                return -1;
-
 	        }
 	        */
 	if ( model->type == MOD_MDM )
@@ -884,7 +1067,7 @@ int RE_LerpTagET( orientation_t *tag, const refEntity_t *refent, const char *tag
 		// old MD3 style
 		retval = R_GetTag( model->mdv[ 0 ], startFrame, tagName, startIndex, &start );
 		retval = R_GetTag( model->mdv[ 0 ], endFrame, tagName, startIndex, &end );
-	
+
 
 		if ( !start || !end )
 		{
@@ -907,7 +1090,7 @@ int RE_LerpTagET( orientation_t *tag, const refEntity_t *refent, const char *tag
 
 		return retval;
 	}
-	
+
 	return -1;
 }
 

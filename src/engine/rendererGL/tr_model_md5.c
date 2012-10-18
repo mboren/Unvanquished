@@ -27,6 +27,137 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /*
 =================
+R_CreateMD5VBOSurfaces
+=================
+*/
+
+void R_CreateMD5VBOSurfaces( const char *modName, md5Model_t *md5 )
+{
+	int           i;
+	int           j;
+	int           k;
+
+	srfTriangle_t *tri;
+	md5Surface_t  *surf;
+
+	int           numRemaining;
+	growList_t    sortedTriangles;
+	growList_t    vboTriangles;
+	growList_t    vboSurfaces;
+
+	int           numBoneReferences;
+	int           boneReferences[ MAX_BONES ];
+
+	// split the surfaces into VBO surfaces by the maximum number of GPU vertex skinning bones
+	Com_InitGrowList( &vboSurfaces, 10 );
+
+	for ( i = 0, surf = md5->surfaces; i < md5->numSurfaces; i++, surf++ )
+	{
+		// sort triangles
+		Com_InitGrowList( &sortedTriangles, 1000 );
+
+		for ( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
+		{
+			skelTriangle_t *sortTri = ( skelTriangle_t *) Com_Allocate( sizeof( *sortTri ) );
+
+			for ( k = 0; k < 3; k++ )
+			{
+				sortTri->indexes[ k ] = tri->indexes[ k ];
+				sortTri->vertexes[ k ] = &surf->verts[ tri->indexes[ k ] ];
+			}
+
+			sortTri->referenced = qfalse;
+
+			Com_AddToGrowList( &sortedTriangles, sortTri );
+		}
+
+		//qsort(sortedTriangles.elements, sortedTriangles.currentElements, sizeof(void *), CompareTrianglesByBoneReferences);
+
+#if 0
+
+		for ( j = 0; j < sortedTriangles.currentElements; j++ )
+		{
+			int            b[ MAX_WEIGHTS * 3 ];
+
+			skelTriangle_t *sortTri = Com_GrowListElement( &sortedTriangles, j );
+
+			for ( k = 0; k < 3; k++ )
+			{
+				v = sortTri->vertexes[ k ];
+
+				for ( l = 0; l < MAX_WEIGHTS; l++ )
+				{
+					b[ k * 3 + l ] = ( l < v->numWeights ) ? v->weights[ l ]->boneIndex : 9999;
+				}
+
+				qsort( b, MAX_WEIGHTS * 3, sizeof( int ), CompareBoneIndices );
+				//ri.Printf(PRINT_ALL, "bone indices: %i %i %i %i\n", b[k * 3 + 0], b[k * 3 + 1], b[k * 3 + 2], b[k * 3 + 3]);
+			}
+		}
+
+#endif
+
+		numRemaining = sortedTriangles.currentElements;
+
+		while ( numRemaining )
+		{
+			numBoneReferences = 0;
+			Com_Memset( boneReferences, 0, sizeof( boneReferences ) );
+
+			Com_InitGrowList( &vboTriangles, 1000 );
+
+			for ( j = 0; j < sortedTriangles.currentElements; j++ )
+			{
+				skelTriangle_t *sortTri = ( skelTriangle_t *) Com_GrowListElement( &sortedTriangles, j );
+
+				if ( sortTri->referenced )
+				{
+					continue;
+				}
+
+				if ( AddTriangleToVBOTriangleList( &vboTriangles, sortTri, &numBoneReferences, boneReferences ) )
+				{
+					sortTri->referenced = qtrue;
+				}
+			}
+
+			if ( !vboTriangles.currentElements )
+			{
+				ri.Printf( PRINT_WARNING, "R_LoadMD5: could not add triangles to a remaining VBO surfaces for model '%s'\n", modName );
+				Com_DestroyGrowList( &vboTriangles );
+				break;
+			}
+
+			AddSurfaceToVBOSurfacesList( &vboSurfaces, &vboTriangles, md5, surf, i, numBoneReferences, boneReferences );
+			numRemaining -= vboTriangles.currentElements;
+
+			Com_DestroyGrowList( &vboTriangles );
+		}
+
+		for ( j = 0; j < sortedTriangles.currentElements; j++ )
+		{
+			skelTriangle_t *sortTri = ( skelTriangle_t * ) Com_GrowListElement( &sortedTriangles, j );
+
+			Com_Dealloc( sortTri );
+		}
+
+		Com_DestroyGrowList( &sortedTriangles );
+	}
+
+	// move VBO surfaces list to hunk
+	md5->numVBOSurfaces = vboSurfaces.currentElements;
+	md5->vboSurfaces = ( srfVBOMD5Mesh_t **) ri.Hunk_Alloc( md5->numVBOSurfaces * sizeof( *md5->vboSurfaces ), h_low );
+
+	for ( i = 0; i < md5->numVBOSurfaces; i++ )
+	{
+		md5->vboSurfaces[ i ] = ( srfVBOMD5Mesh_t * ) Com_GrowListElement( &vboSurfaces, i );
+	}
+
+	Com_DestroyGrowList( &vboSurfaces );
+}
+
+/*
+=================
 R_LoadMD5
 =================
 */
@@ -47,14 +178,6 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 	quat_t        boneQuat;
 	matrix_t      boneMat;
 
-	int           numRemaining;
-	growList_t    sortedTriangles;
-	growList_t    vboTriangles;
-	growList_t    vboSurfaces;
-
-	int           numBoneReferences;
-	int           boneReferences[ MAX_BONES ];
-
 	buf_p = ( char * ) buffer;
 
 	// skip MD5Version indent string
@@ -72,7 +195,7 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 
 	mod->type = MOD_MD5;
 	mod->dataSize += sizeof( md5Model_t );
-	md5 = mod->md5 = ri.Hunk_Alloc( sizeof( md5Model_t ), h_low );
+	md5 = mod->md5 = R_ModelHunk_Alloc( sizeof( md5Model_t ) );
 
 	// skip commandline <arguments string>
 	token = COM_ParseExt2( &buf_p, qtrue );
@@ -119,7 +242,7 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 	//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i bones\n", modName, md5->numBones);
 
 	// parse all the bones
-	md5->bones = ri.Hunk_Alloc( sizeof( *bone ) * md5->numBones, h_low );
+	md5->bones = R_ModelHunk_Alloc( sizeof( *bone ) * md5->numBones );
 
 	// parse joints {
 	token = COM_ParseExt2( &buf_p, qtrue );
@@ -232,7 +355,7 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 
 	//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i surfaces\n", modName, md5->numSurfaces);
 
-	md5->surfaces = ri.Hunk_Alloc( sizeof( *surf ) * md5->numSurfaces, h_low );
+	md5->surfaces = R_ModelHunk_Alloc( sizeof( *surf ) * md5->numSurfaces );
 
 	for ( i = 0, surf = md5->surfaces; i < md5->numSurfaces; i++, surf++ )
 	{
@@ -308,7 +431,7 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 			          modName, SHADER_MAX_VERTEXES, surf->numVerts );
 		}
 
-		surf->verts = ri.Hunk_Alloc( sizeof( *v ) * surf->numVerts, h_low );
+		surf->verts = R_ModelHunk_Alloc( sizeof( *v ) * surf->numVerts );
 
 		for ( j = 0, v = surf->verts; j < surf->numVerts; j++, v++ )
 		{
@@ -378,7 +501,7 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 			          modName, SHADER_MAX_TRIANGLES, surf->numTriangles );
 		}
 
-		surf->triangles = ri.Hunk_Alloc( sizeof( *tri ) * surf->numTriangles, h_low );
+		surf->triangles = R_ModelHunk_Alloc( sizeof( *tri ) * surf->numTriangles );
 
 		for ( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
 		{
@@ -412,7 +535,7 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 		token = COM_ParseExt2( &buf_p, qfalse );
 		surf->numWeights = atoi( token );
 
-		surf->weights = ri.Hunk_Alloc( sizeof( *weight ) * surf->numWeights, h_low );
+		surf->weights = R_ModelHunk_Alloc( sizeof( *weight ) * surf->numWeights );
 
 		for ( j = 0, weight = surf->weights; j < surf->numWeights; j++, weight++ )
 		{
@@ -470,7 +593,7 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 		// loop trough all vertices and set up the vertex weights
 		for ( j = 0, v = surf->verts; j < surf->numVerts; j++, v++ )
 		{
-			v->weights = ri.Hunk_Alloc( sizeof( *v->weights ) * v->numWeights, h_low );
+			v->weights = R_ModelHunk_Alloc( sizeof( *v->weights ) * v->numWeights );
 
 			for ( k = 0; k < v->numWeights; k++ )
 			{
@@ -678,112 +801,6 @@ qboolean R_LoadMD5( model_t *mod, void *buffer, int bufferSize, const char *modN
 #endif
 	}
 
-	// split the surfaces into VBO surfaces by the maximum number of GPU vertex skinning bones
-	Com_InitGrowList( &vboSurfaces, 10 );
-
-	for ( i = 0, surf = md5->surfaces; i < md5->numSurfaces; i++, surf++ )
-	{
-		// sort triangles
-		Com_InitGrowList( &sortedTriangles, 1000 );
-
-		for ( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
-		{
-			skelTriangle_t *sortTri = Com_Allocate( sizeof( *sortTri ) );
-
-			for ( k = 0; k < 3; k++ )
-			{
-				sortTri->indexes[ k ] = tri->indexes[ k ];
-				sortTri->vertexes[ k ] = &surf->verts[ tri->indexes[ k ] ];
-			}
-
-			sortTri->referenced = qfalse;
-
-			Com_AddToGrowList( &sortedTriangles, sortTri );
-		}
-
-		//qsort(sortedTriangles.elements, sortedTriangles.currentElements, sizeof(void *), CompareTrianglesByBoneReferences);
-
-#if 0
-
-		for ( j = 0; j < sortedTriangles.currentElements; j++ )
-		{
-			int            b[ MAX_WEIGHTS * 3 ];
-
-			skelTriangle_t *sortTri = Com_GrowListElement( &sortedTriangles, j );
-
-			for ( k = 0; k < 3; k++ )
-			{
-				v = sortTri->vertexes[ k ];
-
-				for ( l = 0; l < MAX_WEIGHTS; l++ )
-				{
-					b[ k * 3 + l ] = ( l < v->numWeights ) ? v->weights[ l ]->boneIndex : 9999;
-				}
-
-				qsort( b, MAX_WEIGHTS * 3, sizeof( int ), CompareBoneIndices );
-				//ri.Printf(PRINT_ALL, "bone indices: %i %i %i %i\n", b[k * 3 + 0], b[k * 3 + 1], b[k * 3 + 2], b[k * 3 + 3]);
-			}
-		}
-
-#endif
-
-		numRemaining = sortedTriangles.currentElements;
-
-		while ( numRemaining )
-		{
-			numBoneReferences = 0;
-			Com_Memset( boneReferences, 0, sizeof( boneReferences ) );
-
-			Com_InitGrowList( &vboTriangles, 1000 );
-
-			for ( j = 0; j < sortedTriangles.currentElements; j++ )
-			{
-				skelTriangle_t *sortTri = Com_GrowListElement( &sortedTriangles, j );
-
-				if ( sortTri->referenced )
-				{
-					continue;
-				}
-
-				if ( AddTriangleToVBOTriangleList( &vboTriangles, sortTri, &numBoneReferences, boneReferences ) )
-				{
-					sortTri->referenced = qtrue;
-				}
-			}
-
-			if ( !vboTriangles.currentElements )
-			{
-				ri.Printf( PRINT_WARNING, "R_LoadMD5: could not add triangles to a remaining VBO surfaces for model '%s'\n", modName );
-				Com_DestroyGrowList( &vboTriangles );
-				break;
-			}
-
-			AddSurfaceToVBOSurfacesList( &vboSurfaces, &vboTriangles, md5, surf, i, numBoneReferences, boneReferences );
-			numRemaining -= vboTriangles.currentElements;
-
-			Com_DestroyGrowList( &vboTriangles );
-		}
-
-		for ( j = 0; j < sortedTriangles.currentElements; j++ )
-		{
-			skelTriangle_t *sortTri = Com_GrowListElement( &sortedTriangles, j );
-
-			Com_Dealloc( sortTri );
-		}
-
-		Com_DestroyGrowList( &sortedTriangles );
-	}
-
-	// move VBO surfaces list to hunk
-	md5->numVBOSurfaces = vboSurfaces.currentElements;
-	md5->vboSurfaces = ri.Hunk_Alloc( md5->numVBOSurfaces * sizeof( *md5->vboSurfaces ), h_low );
-
-	for ( i = 0; i < md5->numVBOSurfaces; i++ )
-	{
-		md5->vboSurfaces[ i ] = ( srfVBOMD5Mesh_t * ) Com_GrowListElement( &vboSurfaces, i );
-	}
-
-	Com_DestroyGrowList( &vboSurfaces );
-
+	R_CreateMD5VBOSurfaces( modName, md5 );
 	return qtrue;
 }

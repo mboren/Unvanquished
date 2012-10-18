@@ -2159,6 +2159,7 @@ extern "C" {
 		{
 			R_SyncRenderThread();
 
+			R_BackupModels();
 			R_ShutdownCommandBuffers();
 			R_ShutdownImages();
 			R_ShutdownVBOs();
@@ -2224,6 +2225,9 @@ extern "C" {
 #endif
 
 			GLimp_Shutdown();
+
+			R_ShutdownModels();
+
 			ri.Tag_Free();
 #if defined( USE_D3D10 )
 

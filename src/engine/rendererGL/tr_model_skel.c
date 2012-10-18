@@ -234,7 +234,7 @@ void AddSurfaceToVBOSurfacesList( growList_t *vboSurfaces, growList_t *vboTriang
 	indexesNum = vboTriangles->currentElements * 3;
 
 	// create surface
-	vboSurf = ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
+	vboSurf = ( srfVBOMD5Mesh_t * )ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
 	Com_AddToGrowList( vboSurfaces, vboSurf );
 
 	vboSurf->surfaceType = SF_VBO_MD5MESH;

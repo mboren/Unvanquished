@@ -1677,6 +1677,7 @@ static void RB_SurfaceMD5( md5Surface_t *srf )
 	static matrix_t boneMatrices[ MAX_BONES ];
 	vec3_t          tmpVert;
 	vec3_t          tmpPosition;
+	vec3_t          tmpNormal;
 	md5Weight_t     *w;
 
 	GLimp_LogComment( "--- Tess_SurfaceMD5 ---\n" );
@@ -1724,19 +1725,31 @@ static void RB_SurfaceMD5( md5Surface_t *srf )
 	for ( j = 0, v = srf->verts; j < numVertexes; j++, v++ )
 	{
 		VectorClear( tmpPosition );
+		VectorClear( tmpNormal );
 
 		for ( k = 0, w = v->weights[ 0 ]; k < v->numWeights; k++, w++ )
 		{
+			matrix_t inverse;
 			bone = &model->bones[ w->boneIndex ];
 
 			MatrixTransformPoint( boneMatrices[ w->boneIndex ], w->offset, tmpVert );
 			VectorMA( tmpPosition, w->boneWeight, tmpVert, tmpPosition );
+
+			MatrixMultiply( boneMatrices[ w->boneIndex ], bone->inverseTransform, inverse );
+			MatrixTransformNormal( inverse, v->normal, tmpVert );
+			VectorMA( tmpNormal, w->boneWeight, tmpVert, tmpNormal );
 		}
 
+		VectorNormalize( tmpNormal );
 		tess.xyz[ tess.numVertexes + j ].v[ 0 ] = tmpPosition[ 0 ];
 		tess.xyz[ tess.numVertexes + j ].v[ 1 ] = tmpPosition[ 1 ];
 		tess.xyz[ tess.numVertexes + j ].v[ 2 ] = tmpPosition[ 2 ];
 		tess.xyz[ tess.numVertexes + j ].v[ 3 ] = 1;
+
+		tess.normal[ tess.numVertexes + j ].v[ 0 ] = tmpNormal[ 0 ];
+		tess.normal[ tess.numVertexes + j ].v[ 1 ] = tmpNormal[ 1 ];
+		tess.normal[ tess.numVertexes + j ].v[ 2 ] = tmpNormal[ 2 ];
+		tess.normal[ tess.numVertexes + j ].v[ 3 ] = 0;
 
 		tess.texCoords0[ tess.numVertexes + j ].v[ 0 ] = v->texCoords[ 0 ];
 		tess.texCoords0[ tess.numVertexes + j ].v[ 1 ] = v->texCoords[ 1 ];

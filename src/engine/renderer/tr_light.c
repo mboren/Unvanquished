@@ -540,12 +540,6 @@ void R_SetupEntityLighting( const trRefdef_t *refdef, trRefEntity_t *ent )
 		}
 	}
 
-	// HACK: Make md5s appear without shadows.
-	if ( md5 )
-	{
-		VectorSet( ent->ambientLight, 255, 255, 255 );
-	}
-
 	if ( r_debugLight->integer )
 	{
 		LogLight( ent );

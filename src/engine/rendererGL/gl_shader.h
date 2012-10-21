@@ -2783,6 +2783,33 @@ public:
 	void BuildShaderVertexLibNames( std::string& vertexInlines );
 	void SetShaderProgramUniformLocations( shaderProgram_t *shaderProgram );
 	void SetShaderProgramUniforms( shaderProgram_t *shaderProgram );
+
+	void DisableMacros()
+	{
+#if 0
+		/* UNTESTED.
+         * I would think that this approach would also work, but I'm not 100%
+		 * sure how macros register themselves to the GLShader, and presuming
+		 * this code functions how I think it would, it would also disable
+		 * TCGEN_LIGHTMAP, which for some reason is never disabled alongisde
+		 * all the other macros.
+		 */
+		int i;
+
+		for (i = 0; i < _compileMacros.size(); i++)
+		{
+			_compileMacros[i]->DisableMacro();
+		}
+#else
+		/* Note that DisableTCGenLightmap() is conspicuously missing. */
+		DisableAlphaTesting();
+		DisablePortalClipping();
+		DisableVertexSkinning();
+		DisableVertexAnimation();
+		DisableDeformVertexes();
+		DisableTCGenEnvironment();
+#endif
+	}
 };
 
 class GLShader_lightMapping :

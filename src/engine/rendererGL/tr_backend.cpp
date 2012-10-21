@@ -2992,12 +2992,7 @@ static void RB_RenderInteractionsShadowMapped()
 
 										GL_PushMatrix();
 
-										gl_genericShader->DisableAlphaTesting();
-										gl_genericShader->DisablePortalClipping();
-										gl_genericShader->DisableVertexSkinning();
-										gl_genericShader->DisableVertexAnimation();
-										gl_genericShader->DisableDeformVertexes();
-										gl_genericShader->DisableTCGenEnvironment();
+										gl_genericShader->DisableMacros();
 
 										gl_genericShader->BindProgram();
 
@@ -6015,12 +6010,7 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 							GL_State( GLS_POLYMODE_LINE | GLS_DEPTHTEST_DISABLE );
 							GL_Cull( CT_TWO_SIDED );
 
-							gl_genericShader->DisableAlphaTesting();
-							gl_genericShader->DisablePortalClipping();
-							gl_genericShader->DisableVertexSkinning();
-							gl_genericShader->DisableVertexAnimation();
-							gl_genericShader->DisableDeformVertexes();
-							gl_genericShader->DisableTCGenEnvironment();
+							gl_genericShader->DisableMacros();
 
 							gl_genericShader->BindProgram();
 
@@ -7845,12 +7835,7 @@ void RB_RenderLightOcclusionQueries()
 			startTime = ri.Milliseconds();
 		}
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 		gl_genericShader->SetRequiredVertexPointers();
@@ -8443,12 +8428,7 @@ void RB_RenderEntityOcclusionQueries()
 			startTime = ri.Milliseconds();
 		}
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 		gl_genericShader->SetRequiredVertexPointers();
@@ -8825,12 +8805,7 @@ static void RB_RenderDebugUtils()
 		static const vec3_t minSize = { -2, -2, -2 };
 		static const vec3_t maxSize = { 2,  2,  2 };
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -9207,12 +9182,7 @@ static void RB_RenderDebugUtils()
 		static const vec3_t mins = { -1, -1, -1 };
 		static const vec3_t maxs = { 1, 1, 1 };
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -9396,12 +9366,7 @@ static void RB_RenderDebugUtils()
 		static const vec3_t mins = { -1, -1, -1 };
 		static const vec3_t maxs = { 1, 1, 1 };
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -9494,12 +9459,7 @@ static void RB_RenderDebugUtils()
 		static refSkeleton_t skeleton;
 		refSkeleton_t        *skel;
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -9714,12 +9674,7 @@ static void RB_RenderDebugUtils()
 		matrix_t      ortho;
 		vec4_t        quadVerts[ 4 ];
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -9861,12 +9816,7 @@ static void RB_RenderDebugUtils()
 			cubemapProbe_t *cubeProbeNearest;
 			cubemapProbe_t *cubeProbeSecondNearest;
 
-			gl_genericShader->DisableAlphaTesting();
-			gl_genericShader->DisablePortalClipping();
-			gl_genericShader->DisableVertexSkinning();
-			gl_genericShader->DisableVertexAnimation();
-			gl_genericShader->DisableDeformVertexes();
-			gl_genericShader->DisableTCGenEnvironment();
+			gl_genericShader->DisableMacros();
 
 			gl_genericShader->BindProgram();
 
@@ -9939,12 +9889,7 @@ static void RB_RenderDebugUtils()
 
 		GLimp_LogComment( "--- r_showLightGrid > 0: Rendering light grid\n" );
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -10026,12 +9971,7 @@ static void RB_RenderDebugUtils()
 			return;
 		}
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -10387,12 +10327,7 @@ static void RB_RenderDebugUtils()
 			return;
 		}
 
-		gl_genericShader->DisableAlphaTesting();
-		gl_genericShader->DisablePortalClipping();
-		gl_genericShader->DisableVertexSkinning();
-		gl_genericShader->DisableVertexAnimation();
-		gl_genericShader->DisableDeformVertexes();
-		gl_genericShader->DisableTCGenEnvironment();
+		gl_genericShader->DisableMacros();
 
 		gl_genericShader->BindProgram();
 
@@ -11249,12 +11184,7 @@ void RE_StretchRaw( int x, int y, int w, int h, int cols, int rows, const byte *
 	glVertexAttrib4f( ATTR_INDEX_NORMAL, 0, 0, 1, 1 );
 	glVertexAttrib4f( ATTR_INDEX_COLOR, tr.identityLight, tr.identityLight, tr.identityLight, 1 );
 
-	gl_genericShader->DisableAlphaTesting();
-	gl_genericShader->DisablePortalClipping();
-	gl_genericShader->DisableVertexSkinning();
-	gl_genericShader->DisableVertexAnimation();
-	gl_genericShader->DisableDeformVertexes();
-	gl_genericShader->DisableTCGenEnvironment();
+	gl_genericShader->DisableMacros();
 
 	gl_genericShader->BindProgram();
 
@@ -11857,12 +11787,7 @@ void RB_ShowImages( void )
 
 	glFinish();
 
-	gl_genericShader->DisableAlphaTesting();
-	gl_genericShader->DisablePortalClipping();
-	gl_genericShader->DisableVertexSkinning();
-	gl_genericShader->DisableVertexAnimation();
-	gl_genericShader->DisableDeformVertexes();
-	gl_genericShader->DisableTCGenEnvironment();
+	gl_genericShader->DisableMacros();
 
 	gl_genericShader->BindProgram();
 

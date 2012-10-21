@@ -51,9 +51,9 @@ Maryland 20850 USA.
 
 #define MIN_DEDICATED_COMHUNKMEGS 4
 #define MIN_COMHUNKMEGS           256 // JPW NERVE changed this to 42 for MP, was 56 for team arena and 75 for wolfSP
-#define DEF_COMHUNKMEGS           512 // RF, increased this, some maps are exceeding 56mb
+#define DEF_COMHUNKMEGS           384 // RF, increased this, some maps are exceeding 56mb
 // JPW NERVE changed this for multiplayer back to 42, 56 for depot/mp_cpdepot, 42 for everything else
-#define DEF_COMZONEMEGS           96 // RF, increased this from 16, to account for botlib/AAS
+#define DEF_COMZONEMEGS           64 // RF, increased this from 16, to account for botlib/AAS
 #define DEF_COMHUNKMEGS_S         XSTRING(DEF_COMHUNKMEGS)
 #define DEF_COMZONEMEGS_S         XSTRING(DEF_COMZONEMEGS)
 
@@ -3377,12 +3377,12 @@ void Com_ReadFromPipe( void )
 	static char buf[ MAX_STRING_CHARS ];
 	static int  numAccd = 0;
 	int         numNew;
-	
+
 	if ( !pipefile )
 	{
 		return;
 	}
-	
+
 	while ( ( numNew = FS_Read( buf + numAccd, sizeof( buf ) - 1 - numAccd, pipefile ) ) > 0 )
 	{
 		char *brk = NULL; // will point to after the last CR/LF character, if any
@@ -3801,7 +3801,7 @@ void Com_Frame( void )
 	//key = lastTime * 0x87243987;
 
 	Com_ReadFromPipe();
-	
+
 	com_frameNumber++;
 }
 

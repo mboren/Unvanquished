@@ -179,221 +179,63 @@ void GLSL_InitGPUShaders( void )
 
 void GLSL_ShutdownGPUShaders( void )
 {
-//	int        i;
+	int i = 0;
+
+	struct {
+		short isLast;
+		GLShader **shader;
+	} shaders[] =
+	{
+		#if !defined( GLSL_COMPILE_STARTUP_ONLY )
+			{ 0, (GLShader**) &gl_depthToColorShader },
+			{ 0, (GLShader**) &gl_deferredShadowingShader_proj },
+			{ 0, (GLShader**) &gl_liquidShader },
+			{ 0, (GLShader**) &gl_volumetricFogShader },
+			#ifdef VOLUMETRIC_LIGHTING
+				{ 0, (GLShader**) &gl_lightVolumeShader_omni },
+			#endif
+			#ifdef EXPERIMENTAL
+				{ 0, (GLShader**) &gl_screenSpaceAmbientOcclusionShader },
+				{ 0, (GLShader**) &gl_depthOfFieldShader }
+			#endif
+		#endif
+		{ 0, (GLShader**) &gl_genericShader },
+		{ 0, (GLShader**) &gl_vertexLightingShader_DBS_entity },
+		{ 0, (GLShader**) &gl_vertexLightingShader_DBS_world },
+		{ 0, (GLShader**) &gl_lightMappingShader },
+		{ 0, (GLShader**) &gl_geometricFillShader },
+		{ 0, (GLShader**) &gl_deferredLightingShader_omniXYZ },
+		{ 0, (GLShader**) &gl_deferredLightingShader_projXYZ },
+		{ 0, (GLShader**) &gl_deferredLightingShader_directionalSun },
+		{ 0, (GLShader**) &gl_shadowFillShader },
+		{ 0, (GLShader**) &gl_forwardLightingShader_omniXYZ },
+		{ 0, (GLShader**) &gl_forwardLightingShader_projXYZ },
+		{ 0, (GLShader**) &gl_forwardLightingShader_directionalSun },
+		{ 0, (GLShader**) &gl_reflectionShader },
+		{ 0, (GLShader**) &gl_skyboxShader },
+		{ 0, (GLShader**) &gl_fogQuake3Shader },
+		{ 0, (GLShader**) &gl_fogGlobalShader },
+		{ 0, (GLShader**) &gl_heatHazeShader },
+		{ 0, (GLShader**) &gl_screenShader },
+		{ 0, (GLShader**) &gl_portalShader },
+		{ 0, (GLShader**) &gl_toneMappingShader },
+		{ 0, (GLShader**) &gl_contrastShader },
+		{ 0, (GLShader**) &gl_cameraEffectsShader },
+		{ 0, (GLShader**) &gl_blurXShader },
+		{ 0, (GLShader**) &gl_blurYShader },
+		{ 1, (GLShader**) &gl_debugShadowMapShader }
+	};
 
 	ri.Printf( PRINT_ALL, "------- GLSL_ShutdownGPUShaders -------\n" );
 
-	if ( gl_genericShader )
+	do
 	{
-		delete gl_genericShader;
-		gl_genericShader = NULL;
-	}
-
-	if ( gl_vertexLightingShader_DBS_entity )
-	{
-		delete gl_vertexLightingShader_DBS_entity;
-		gl_vertexLightingShader_DBS_entity = NULL;
-	}
-
-	if ( gl_vertexLightingShader_DBS_world )
-	{
-		delete gl_vertexLightingShader_DBS_world;
-		gl_vertexLightingShader_DBS_world = NULL;
-	}
-
-	if ( gl_lightMappingShader )
-	{
-		delete gl_lightMappingShader;
-		gl_lightMappingShader = NULL;
-	}
-
-	if ( gl_geometricFillShader )
-	{
-		delete gl_geometricFillShader;
-		gl_geometricFillShader = NULL;
-	}
-
-	if ( gl_deferredLightingShader_omniXYZ )
-	{
-		delete gl_deferredLightingShader_omniXYZ;
-		gl_deferredLightingShader_omniXYZ = NULL;
-	}
-
-	if( gl_deferredLightingShader_projXYZ ) 
-	{
-		delete gl_deferredLightingShader_projXYZ;
-		gl_deferredLightingShader_projXYZ = NULL;
-	}
-
-	if( gl_deferredLightingShader_directionalSun )
-	{
-		delete gl_deferredLightingShader_directionalSun;
-		gl_deferredLightingShader_directionalSun = NULL;
-	}
-
-#if !defined( GLSL_COMPILE_STARTUP_ONLY )
-
-	if ( gl_depthToColorShader )
-	{
-		delete gl_depthToColorShader;
-		gl_depthToColorShader = NULL;
-	}
-
-#endif // #if !defined(GLSL_COMPILE_STARTUP_ONLY)
-
-	if ( gl_shadowFillShader )
-	{
-		delete gl_shadowFillShader;
-		gl_shadowFillShader = NULL;
-	}
-
-	if ( gl_forwardLightingShader_omniXYZ )
-	{
-		delete gl_forwardLightingShader_omniXYZ;
-		gl_forwardLightingShader_omniXYZ = NULL;
-	}
-
-	if ( gl_forwardLightingShader_projXYZ )
-	{
-		delete gl_forwardLightingShader_projXYZ;
-		gl_forwardLightingShader_projXYZ = NULL;
-	}
-
-	if ( gl_forwardLightingShader_directionalSun )
-	{
-		delete gl_forwardLightingShader_directionalSun;
-		gl_forwardLightingShader_directionalSun = NULL;
-	}
-
-#if !defined( GLSL_COMPILE_STARTUP_ONLY )
-
-#ifdef VOLUMETRIC_LIGHTING
-
-	if ( gl_lightVolumeShader_omni )
-	{
-		delete gl_lightVolumeShader_omni;
-		gl_lightVolumeShader_omni = NULL;
-	}
-
-#endif
-
-	if ( gl_deferredShadowingShader_proj )
-	{
-		delete gl_deferredShadowingShader_proj;
-		gl_deferredShadowingShader_proj = NULL;
-	}
-
-#endif // #if !defined(GLSL_COMPILE_STARTUP_ONLY)
-
-	if ( gl_reflectionShader )
-	{
-		delete gl_reflectionShader;
-		gl_reflectionShader = NULL;
-	}
-
-	if ( gl_skyboxShader )
-	{
-		delete gl_skyboxShader;
-		gl_skyboxShader = NULL;
-	}
-
-	if ( gl_fogQuake3Shader )
-	{
-		delete gl_fogQuake3Shader;
-		gl_fogQuake3Shader = NULL;
-	}
-
-	if ( gl_fogGlobalShader )
-	{
-		delete gl_fogGlobalShader;
-		gl_fogGlobalShader = NULL;
-	}
-
-	if ( gl_heatHazeShader )
-	{
-		delete gl_heatHazeShader;
-		gl_heatHazeShader = NULL;
-	}
-
-	if ( gl_screenShader )
-	{
-		delete gl_screenShader;
-		gl_screenShader = NULL;
-	}
-
-	if ( gl_portalShader )
-	{
-		delete gl_portalShader;
-		gl_portalShader = NULL;
-	}
-
-	if ( gl_toneMappingShader )
-	{
-		delete gl_toneMappingShader;
-		gl_toneMappingShader = NULL;
-	}
-
-	if ( gl_contrastShader )
-	{
-		delete gl_contrastShader;
-		gl_contrastShader = NULL;
-	}
-
-	if ( gl_cameraEffectsShader )
-	{
-		delete gl_cameraEffectsShader;
-		gl_cameraEffectsShader = NULL;
-	}
-
-	if ( gl_blurXShader )
-	{
-		delete gl_blurXShader;
-		gl_blurXShader = NULL;
-	}
-
-	if ( gl_blurYShader )
-	{
-		delete gl_blurYShader;
-		gl_blurYShader = NULL;
-	}
-
-	if ( gl_debugShadowMapShader )
-	{
-		delete gl_debugShadowMapShader;
-		gl_debugShadowMapShader = NULL;
-	}
-
-#if !defined( GLSL_COMPILE_STARTUP_ONLY )
-
-	if ( gl_liquidShader )
-	{
-		delete gl_liquidShader;
-		gl_liquidShader = NULL;
-	}
-
-	if ( gl_volumetricFogShader )
-	{
-		delete gl_volumetricFogShader;
-		gl_volumetricFogShader = NULL;
-	}
-
-#ifdef EXPERIMENTAL
-
-	if ( gl_screenSpaceAmbientOcclusionShader )
-	{
-		delete gl_screenSpaceAmbientOcclusionShader;
-		gl_screenSpaceAmbientOcclusionShader = NULL;
-	}
-
-	if ( gl_depthOfFieldShader )
-	{
-		delete gl_depthOfFieldShader;
-		gl_depthOfFieldShader = NULL;
-	}
-
-#endif
-
-#endif // #if !defined(GLSL_COMPILE_STARTUP_ONLY)
+		if ( *(shaders[ i ].shader) )
+		{
+			delete *(shaders[ i ].shader);
+			*(shaders[ i ].shader) = NULL;
+		}
+	} while ( !shaders[ i++ ].isLast );
 
 	glState.currentProgram = 0;
 

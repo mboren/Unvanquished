@@ -89,7 +89,6 @@ protected:
 		_vertexAttribsRequired( vertexAttribsRequired ),
 		_vertexAttribs( 0 )
 	{
-
 	}
 
 public:
@@ -2171,6 +2170,18 @@ public:
 
 	void SetUniform_PortalPlane( const vec4_t v )
 	{
+		GLSL_SetUniform_PortalPlane( _shader->GetProgram(), v );
+	}
+
+	void SetUniform_PortalPlane( const cplane_t *plane )
+	{
+		vec4_t v;
+
+		v[ 0 ] = plane->normal[ 0 ];
+		v[ 1 ] = plane->normal[ 1 ];
+		v[ 2 ] = plane->normal[ 2 ];
+		v[ 3 ] = plane->dist;
+
 		GLSL_SetUniform_PortalPlane( _shader->GetProgram(), v );
 	}
 };

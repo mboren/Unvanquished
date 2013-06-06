@@ -63,7 +63,7 @@ static void *VM_LookupSym( const std::string& symbol )
 		void       *func;
 	} lookup[] = {
 		EXPORTFUNC( Q_snprintf ),
-		EXPORTFUNC( Q_strncpyz ),
+		//EXPORTFUNC( Q_strncpyz ),
 		EXPORTFUNC( Q_vsnprintf ),
 		EXPORTFUNC( atan2 ),
 		EXPORTFUNC( ceil ),
@@ -143,7 +143,7 @@ void *VM_LoadLLVM( vm_t *vm, intptr_t (*systemcalls)(intptr_t, ...) ) {
 		 * call to engine->getPointerToFunction below. This is OK though, since the
 		 * parameter is only there for backwards compatibility and they plan to reverse
 		 * its default to false at some point in the future.  */
-		engine = ExecutionEngine::create( module, false, &str, CodeGenOpt::Default, false );
+		engine = ExecutionEngine::createJIT( module, &str );
 		if ( !engine ) {
 			Com_Printf( "Couldn't create ExecutionEngine: %s\n", str.c_str());
 			return NULL;
@@ -154,30 +154,39 @@ void *VM_LoadLLVM( vm_t *vm, intptr_t (*systemcalls)(intptr_t, ...) ) {
 		engine->addModule( module );
 	}
 
-	PassManagerBuilder PMBuilder;
-	PMBuilder.OptLevel = 3;
-	PMBuilder.SizeLevel = false;
-	PMBuilder.DisableSimplifyLibCalls = false;
-	PMBuilder.DisableUnitAtATime = false;
-	PMBuilder.DisableUnrollLoops = false;
 
-	PMBuilder.Inliner = createFunctionInliningPass(275);
+	/*
+	   PassManagerBuilder PMBuilder;
+	   PMBuilder.OptLevel = 3;
+	   PMBuilder.SizeLevel = false;
+	   PMBuilder.DisableSimplifyLibCalls = false;
+	   PMBuilder.DisableUnitAtATime = false;
+	   PMBuilder.DisableUnrollLoops = false;
 
-	PassManager * PerModulePasses = new PassManager();
-	PerModulePasses->add(new DataLayout(*engine->getDataLayout()));
+	   PMBuilder.Inliner = createFunctionInliningPass(275);
 
-	PassManager *MPM = PerModulePasses;
-	PMBuilder.populateModulePassManager(*MPM);
+	   PassManager * PerModulePasses = new PassManager();
+	   PerModulePasses->add(new DataLayout(*engine->getDataLayout()));
 
-	Function *func = module->getFunction("dllEntry");
-	dllEntry_t dllEntry = (dllEntry_t)engine->getPointerToFunction(func);
+	   PassManager *MPM = PerModulePasses;
+	   PMBuilder.populateModulePassManager(*MPM);
+	   */
+	Function *dllEntryFunc = module->getFunction("dllEntry");
+	if (!dllEntryFunc) {
+		Com_Printf( "Couldn't get the adress of the dllEntry function in %s\n", filename);
+		return NULL;
+	}
 
-
+	dllEntry_t dllEntry = (dllEntry_t)engine->getPointerToFunction(dllEntryFunc);
 	dllEntry(systemcalls);
 
-	func = module->getFunction(std::string("vmMain"));
-	intptr_t(*fp) (int,...) = (intptr_t(*)(int,...))engine->getPointerToFunction(func);
+	Function* vmMainFunc = module->getFunction(std::string("vmMain"));
+	if (!vmMainFunc) {
+		Com_Printf( "Couldn't get the adress of the vmMain function in %s\n", filename);
+		return NULL;
+	}
 
+	intptr_t(*fp) (int,...) = (intptr_t(*)(int,...))engine->getPointerToFunction(vmMainFunc);
 	vm->entryPoint = fp;
 
 	if ( com_developer->integer ) {

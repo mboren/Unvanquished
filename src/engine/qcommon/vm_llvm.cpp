@@ -39,8 +39,8 @@ extern "C" {
 #include <llvm/Support/MemoryBuffer.h>
 #include <llvm/Bitcode/ReaderWriter.h>
 #include <llvm/PassManager.h>
+#include <llvm/DataLayout.h>
 #include <llvm/Support/TargetSelect.h>
-#include <llvm/Target/TargetData.h>
 #include <llvm/Transforms/IPO.h>
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/ExecutionEngine/JIT.h>
@@ -133,21 +133,6 @@ void *VM_LoadLLVM( vm_t *vm, intptr_t (*systemcalls)(intptr_t, ...) ) {
 		return NULL;
 	}
 
-	PassManagerBuilder PMBuilder;
-	PMBuilder.OptLevel = 3;
-	PMBuilder.SizeLevel = false;
-	PMBuilder.DisableSimplifyLibCalls = false;
-	PMBuilder.DisableUnitAtATime = false;
-	PMBuilder.DisableUnrollLoops = false;
-
-	PMBuilder.Inliner = createFunctionInliningPass(275);
-
-	PassManager * PerModulePasses = new PassManager();
-	PerModulePasses->add(new TargetData(module));
-
-	PassManager *MPM = PerModulePasses;
-	PMBuilder.populateModulePassManager(*MPM);
-
 	if ( !engine ) {
 		InitializeNativeTarget();
 
@@ -168,6 +153,21 @@ void *VM_LoadLLVM( vm_t *vm, intptr_t (*systemcalls)(intptr_t, ...) ) {
 	} else {
 		engine->addModule( module );
 	}
+
+	PassManagerBuilder PMBuilder;
+	PMBuilder.OptLevel = 3;
+	PMBuilder.SizeLevel = false;
+	PMBuilder.DisableSimplifyLibCalls = false;
+	PMBuilder.DisableUnitAtATime = false;
+	PMBuilder.DisableUnrollLoops = false;
+
+	PMBuilder.Inliner = createFunctionInliningPass(275);
+
+	PassManager * PerModulePasses = new PassManager();
+	PerModulePasses->add(new DataLayout(*engine->getDataLayout()));
+
+	PassManager *MPM = PerModulePasses;
+	PMBuilder.populateModulePassManager(*MPM);
 
 	Function *func = module->getFunction("dllEntry");
 	dllEntry_t dllEntry = (dllEntry_t)engine->getPointerToFunction(func);

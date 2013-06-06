@@ -649,6 +649,13 @@ set( GAME_VM_COMMON
   ${MOUNT_DIR}/engine/qcommon/q_static.c
 )
 
+
+set( GAMELOGIC_SHAREDLIST
+  ${MOUNT_DIR}/engine/qcommon/./q_shared.c
+  ${MOUNT_DIR}/engine/qcommon/./q_unicode.c
+  ${MOUNT_DIR}/engine/qcommon/./q_math.c
+)
+
 # Any .def files must come at the end of the file list otherwise they will be ignored
 set( CGAMEGPP_BASE
   ${GPP_DIR}/cgame/cg_main.c
@@ -684,13 +691,19 @@ set( CGAMEGPP_BASE
   ${GPP_DIR}/cgame/cg_utils.c
   ${GPP_DIR}/ui/ui_shared.c
   ${GPP_DIR}/ui/ui_utf8.c
-  ${SHAREDLIST}
+  ${GAMELOGIC_SHAREDLIST}
 )
 
 set( CGAMEGPP_SO
   ${CGAMEGPP_BASE}
   ${GPP_DIR}/cgame/cg_api.c
   ${GPP_DIR}/cgame/cgame.def
+)
+
+set( CGAMEGPP_LLVM
+  ${CGAMEGPP_BASE}
+  ${GPP_DIR}/cgame/./cg_api.c
+  ${GPP_DIR}/cgame/./cgame.def
 )
 
 set( CGAMEGPP_QVM
@@ -733,13 +746,19 @@ set( GAMEGPP_BASE
   ${GPP_DIR}/game/g_weapon.c
   ${GPP_DIR}/game/g_admin.c
   ${GPP_DIR}/game/g_namelog.c
-  ${SHAREDLIST}
+  ${GAMELOGIC_SHAREDLIST}
 )
 
 set( GAMEGPP_SO
   ${GAMEGPP_BASE}
   ${GPP_DIR}/game/g_api.c
   ${GPP_DIR}/game/game.def
+)
+
+set( GAMEGPP_LLVM
+  ${GAMEGPP_BASE}
+  ${GPP_DIR}/game/./g_api.c
+  ${GPP_DIR}/game/./game.def
 )
 
 set( GAMEGPP_QVM
@@ -756,13 +775,19 @@ set( UIGPP_BASE
   ${GPP_DIR}/game/bg_lib.c
   ${GPP_DIR}/game/bg_alloc.c
   ${GPP_DIR}/ui/ui_utf8.c
-  ${SHAREDLIST}
+  ${GAMELOGIC_SHAREDLIST}
 )
 
 set( UIGPP_SO
   ${UIGPP_BASE}
   ${GPP_DIR}/ui/ui_api.c
   ${GPP_DIR}/ui/ui.def
+)
+
+set( UIGPP_LLVM
+  ${UIGPP_BASE}
+  ${GPP_DIR}/ui/./ui_api.c
+  ${GPP_DIR}/ui/./ui.def
 )
 
 set( UIGPP_QVM
@@ -1062,7 +1087,7 @@ include( CMakeParseArguments )
 function( GAMELIB )
   # ParseArguments setup
   set( oneValueArgs LIB_NAME OUTPUT_NAME OUTPUT_DIR )
-  set( multiValueArgs COMPILE_DEF LIB_FILES QVM_FILES QVM_ASM )
+  set( multiValueArgs COMPILE_DEF LLVM_FILES LIB_FILES QVM_FILES QVM_ASM )
   cmake_parse_arguments( GAMELIB "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
   if( GAME_LIB )
@@ -1083,7 +1108,7 @@ function( GAMELIB )
     endif()
 
     if( GAME_LIB_LLVM )
-      add_library( ${GAMELIB_LIB_NAME} SHARED ${GAMELIB_LIB_FILES} ${GAME_VM_COMMON} )
+        add_library( ${GAMELIB_LIB_NAME} SHARED ${GAMELIB_LLVM_FILES} ${GAME_VM_COMMON} )
     else()
       add_library( ${GAMELIB_LIB_NAME} SHARED ${GAMELIB_LIB_FILES} )
     endif()
@@ -1108,15 +1133,22 @@ function( GAMELIB )
 
       set( GAMELIB_LLVM_FLAGS "-w -emit-llvm -DQ3_VM -nostdinc -I${GAMELIB_SOURCE_NAME} -Isrc/engine/qcommon -I${GAMELIB_SOURCE_NAME}/game -I${GAMELIB_SOURCE_NAME}/src/cgame -I${GAMELIB_SOURCE_NAME}/ui" )
 
-      set( GAMELIB_LIB_CXX )
-      foreach( FILE ${GAMELIB_LIB_FILES} )
+      set( GAMELIB_LLVM_CXX )
+      foreach( FILE ${GAMELIB_LLVM_FILES} )
         if( FILE MATCHES "\\.cpp$" )
-          set( GAMELIB_LIB_CXX ${GAMELIB_LIB_CXX} ${FILE} )
+            set( GAMELIB_LLVM_CXX ${GAMELIB_LLVM_CXX} ${FILE} )
+        else()
+            if( FILE MATCHES "\\.cpp$" )
+                set( GAMELIB_LLVM_C ${GAMELIB_LLVM_C} ${FILE} )
+            endif()
         endif()
       endforeach()
 
-      set_source_files_properties( ${GAMELIB_LIB_FILES} ${GAME_VM_COMMON} PROPERTIES LANGUAGE LLVM )
-      set_source_files_properties( ${GAMELIB_LIB_CXX} PROPERTIES LANGUAGE LLVMXX )
+      set_source_files_properties( ${GAME_VM_COMMON} PROPERTIES LANGUAGE LLVM )
+      set_source_files_properties( ${GAMELIB_LLVM_C} PROPERTIES LANGUAGE LLVM )
+      set_source_files_properties( ${GAMELIB_LLVM_CXX} PROPERTIES LANGUAGE LLVMXX )
+
+      #set( GAMELIB_LLVM_FILES ${GAME_VM_COMMON} ${GAMELIB_LLVM_C} ${GAMELIB_LLVM_CXX})
 
       # First target is for at least i386
       set_target_properties( ${GAMELIB_LIB_NAME} PROPERTIES
@@ -1128,7 +1160,7 @@ function( GAMELIB )
         LINK_FLAGS -emit-llvm
       )
       # And a second target for at least amd64
-      add_library( ${GAMELIB_LIB_NAME}_64 SHARED ${GAMELIB_LIB_FILES} ${GAME_VM_COMMON} )
+      add_library( ${GAMELIB_LIB_NAME}_64 SHARED ${GAMELIB_LLVM_FILES} ${GAME_VM_COMMON} )
       target_link_libraries( ${GAMELIB_LIB_NAME}_64 m )
       set_target_properties( ${GAMELIB_LIB_NAME}_64 PROPERTIES
         PREFIX "vm/"
@@ -1205,6 +1237,7 @@ GAMELIB( LIB_NAME gppgame
   OUTPUT_DIR main
   COMPILE_DEF GAME GAMEDLL GPP USE_REFENTITY_ANIMATIONSYSTEM
   LIB_FILES ${GAMEGPP_SO} ${GPP_DIR}
+  LLVM_FILES ${GAMEGPP_LLVM}
   QVM_FILES ${GAMEGPP_BASE}
   QVM_ASM ${GAMEGPP_QVM}
 )
@@ -1214,6 +1247,7 @@ GAMELIB( LIB_NAME gpptrem
   OUTPUT_DIR main
   COMPILE_DEF CGAME CGAMEDLL GPP USE_REFENTITY_ANIMATIONSYSTEM
   LIB_FILES ${CGAMEGPP_SO}
+  LLVM_FILES ${CGAMEGPP_LLVM}
   QVM_FILES ${CGAMEGPP_BASE}
   QVM_ASM ${CGAMEGPP_QVM}
 )
@@ -1223,6 +1257,7 @@ GAMELIB( LIB_NAME gppui
   OUTPUT_DIR main
   COMPILE_DEF UI UIDLL GPP USE_REFENTITY_ANIMATIONSYSTEM
   LIB_FILES ${UIGPP_SO}
+  LLVM_FILES ${UIGPP_LLVM}
   QVM_FILES ${UIGPP_BASE}
   QVM_ASM ${UIGPP_QVM}
 )

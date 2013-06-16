@@ -66,6 +66,7 @@ static void *VM_LookupSym( const std::string& symbol )
 		EXPORTFUNC( cos ),
 		EXPORTFUNC( sin ),
 		EXPORTFUNC( sqrt ),
+		EXPORTFUNC( sqrtf ),
 		EXPORTFUNC( powf ),
 		EXPORTFUNC( ceil ),
 		EXPORTFUNC( floor ),

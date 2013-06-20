@@ -651,7 +651,7 @@ set( GAME_VM_COMMON
 
 # Any .def files must come at the end of the file list otherwise they will be ignored
 set( CGAMEGPP_BASE
-  ${GPP_DIR}/cgame/cg_main.c
+  ${GPP_DIR}/client-game/cg_main.c
   ${GPP_DIR}/game/bg_misc.c
   ${GPP_DIR}/game/bg_parse.c
   ${GPP_DIR}/game/bg_pmove.c
@@ -659,29 +659,29 @@ set( CGAMEGPP_BASE
   ${GPP_DIR}/game/bg_lib.c
   ${GPP_DIR}/game/bg_alloc.c
   ${GPP_DIR}/game/bg_voice.c
-  ${GPP_DIR}/cgame/cg_consolecmds.c
-  ${GPP_DIR}/cgame/cg_buildable.c
-  ${GPP_DIR}/cgame/cg_animation.c
-  ${GPP_DIR}/cgame/cg_animmapobj.c
-  ${GPP_DIR}/cgame/cg_draw.c
-  ${GPP_DIR}/cgame/cg_drawtools.c
-  ${GPP_DIR}/cgame/cg_ents.c
-  ${GPP_DIR}/cgame/cg_event.c
-  ${GPP_DIR}/cgame/cg_marks.c
-  ${GPP_DIR}/cgame/cg_minimap.c
-  ${GPP_DIR}/cgame/cg_players.c
-  ${GPP_DIR}/cgame/cg_playerstate.c
-  ${GPP_DIR}/cgame/cg_predict.c
-  ${GPP_DIR}/cgame/cg_servercmds.c
-  ${GPP_DIR}/cgame/cg_snapshot.c
-  ${GPP_DIR}/cgame/cg_view.c
-  ${GPP_DIR}/cgame/cg_weapons.c
-  ${GPP_DIR}/cgame/cg_scanner.c
-  ${GPP_DIR}/cgame/cg_attachment.c
-  ${GPP_DIR}/cgame/cg_trails.c
-  ${GPP_DIR}/cgame/cg_particles.c
-  ${GPP_DIR}/cgame/cg_tutorial.c
-  ${GPP_DIR}/cgame/cg_utils.c
+  ${GPP_DIR}/client-game/cg_consolecmds.c
+  ${GPP_DIR}/client-game/cg_buildable.c
+  ${GPP_DIR}/client-game/cg_animation.c
+  ${GPP_DIR}/client-game/cg_animmapobj.c
+  ${GPP_DIR}/client-game/cg_draw.c
+  ${GPP_DIR}/client-game/cg_drawtools.c
+  ${GPP_DIR}/client-game/cg_ents.c
+  ${GPP_DIR}/client-game/cg_event.c
+  ${GPP_DIR}/client-game/cg_marks.c
+  ${GPP_DIR}/client-game/cg_minimap.c
+  ${GPP_DIR}/client-game/cg_players.c
+  ${GPP_DIR}/client-game/cg_playerstate.c
+  ${GPP_DIR}/client-game/cg_predict.c
+  ${GPP_DIR}/client-game/cg_servercmds.c
+  ${GPP_DIR}/client-game/cg_snapshot.c
+  ${GPP_DIR}/client-game/cg_view.c
+  ${GPP_DIR}/client-game/cg_weapons.c
+  ${GPP_DIR}/client-game/cg_scanner.c
+  ${GPP_DIR}/client-game/cg_attachment.c
+  ${GPP_DIR}/client-game/cg_trails.c
+  ${GPP_DIR}/client-game/cg_particles.c
+  ${GPP_DIR}/client-game/cg_tutorial.c
+  ${GPP_DIR}/client-game/cg_utils.c
   ${GPP_DIR}/ui/ui_shared.c
   ${GPP_DIR}/ui/ui_utf8.c
   ${SHAREDLIST}
@@ -689,16 +689,16 @@ set( CGAMEGPP_BASE
 
 set( CGAMEGPP_SO
   ${CGAMEGPP_BASE}
-  ${GPP_DIR}/cgame/cg_api.c
-  ${GPP_DIR}/cgame/cgame.def
+  ${GPP_DIR}/client-game/cg_api.c
+  ${GPP_DIR}/client-game/cgame.def
 )
 
 set( CGAMEGPP_QVM
-  ${GPP_DIR}/cgame/cg_api.asm
+  ${GPP_DIR}/client-game/cg_api.asm
 )
 
 set( GAMEGPP_BASE
-  ${GPP_DIR}/game/g_main.c
+  ${GPP_DIR}/server-game/g_main.c
   ${GPP_DIR}/game/bg_misc.c
   ${GPP_DIR}/game/bg_parse.c
   ${GPP_DIR}/game/bg_pmove.c
@@ -706,44 +706,44 @@ set( GAMEGPP_BASE
   ${GPP_DIR}/game/bg_lib.c
   ${GPP_DIR}/game/bg_alloc.c
   ${GPP_DIR}/game/bg_voice.c
-  ${GPP_DIR}/game/g_active.c
-  ${GPP_DIR}/game/g_client.c
-  ${GPP_DIR}/game/g_cmds.c
-  ${GPP_DIR}/game/g_combat.c
-  ${GPP_DIR}/game/g_entities.c
-  ${GPP_DIR}/game/g_physics.c
-  ${GPP_DIR}/game/g_buildable.c
-  ${GPP_DIR}/game/g_missile.c
-  ${GPP_DIR}/game/g_session.c
-  ${GPP_DIR}/game/g_spawn_afx.c
-  ${GPP_DIR}/game/g_spawn_ctrl.c
-  ${GPP_DIR}/game/g_spawn_fx.c
-  ${GPP_DIR}/game/g_spawn_game.c
-  ${GPP_DIR}/game/g_spawn_generic.c
-  ${GPP_DIR}/game/g_spawn_gfx.c
-  ${GPP_DIR}/game/g_spawn_mover.c
-  ${GPP_DIR}/game/g_spawn_position.c
-  ${GPP_DIR}/game/g_spawn_sensor.c
-  ${GPP_DIR}/game/g_spawn_shared.c
-  ${GPP_DIR}/game/g_spawn.c
-  ${GPP_DIR}/game/g_svcmds.c
-  ${GPP_DIR}/game/g_team.c
-  ${GPP_DIR}/game/g_utils.c
-  ${GPP_DIR}/game/g_maprotation.c
-  ${GPP_DIR}/game/g_weapon.c
-  ${GPP_DIR}/game/g_admin.c
-  ${GPP_DIR}/game/g_namelog.c
+  ${GPP_DIR}/server-game/g_active.c
+  ${GPP_DIR}/server-game/g_client.c
+  ${GPP_DIR}/server-game/g_cmds.c
+  ${GPP_DIR}/server-game/g_combat.c
+  ${GPP_DIR}/server-game/g_entities.c
+  ${GPP_DIR}/server-game/g_physics.c
+  ${GPP_DIR}/server-game/g_buildable.c
+  ${GPP_DIR}/server-game/g_missile.c
+  ${GPP_DIR}/server-game/g_session.c
+  ${GPP_DIR}/server-game/g_spawn_afx.c
+  ${GPP_DIR}/server-game/g_spawn_ctrl.c
+  ${GPP_DIR}/server-game/g_spawn_fx.c
+  ${GPP_DIR}/server-game/g_spawn_game.c
+  ${GPP_DIR}/server-game/g_spawn_generic.c
+  ${GPP_DIR}/server-game/g_spawn_gfx.c
+  ${GPP_DIR}/server-game/g_spawn_mover.c
+  ${GPP_DIR}/server-game/g_spawn_position.c
+  ${GPP_DIR}/server-game/g_spawn_sensor.c
+  ${GPP_DIR}/server-game/g_spawn_shared.c
+  ${GPP_DIR}/server-game/g_spawn.c
+  ${GPP_DIR}/server-game/g_svcmds.c
+  ${GPP_DIR}/server-game/g_team.c
+  ${GPP_DIR}/server-game/g_utils.c
+  ${GPP_DIR}/server-game/g_maprotation.c
+  ${GPP_DIR}/server-game/g_weapon.c
+  ${GPP_DIR}/server-game/g_admin.c
+  ${GPP_DIR}/server-game/g_namelog.c
   ${SHAREDLIST}
 )
 
 set( GAMEGPP_SO
   ${GAMEGPP_BASE}
-  ${GPP_DIR}/game/g_api.c
-  ${GPP_DIR}/game/game.def
+  ${GPP_DIR}/server-game/g_api.c
+  ${GPP_DIR}/server-game/game.def
 )
 
 set( GAMEGPP_QVM
-  ${GPP_DIR}/game/g_api.asm
+  ${GPP_DIR}/server-game/g_api.asm
 )
 
 set( UIGPP_BASE

@@ -16,7 +16,7 @@ done
 sed 's/^#\. \(.\+:[0-9]\+\)$/#: \1/' < messages_game.pot > messages_game.pot.tmp
 mv messages_game.pot.tmp messages_game.pot
 
-src/utils/gender_context.pl src/gamelogic/cgame/cg_event.c >> messages_game.pot
+src/utils/gender_context.pl src/gamelogic/client-game/cg_event.c >> messages_game.pot
 
 find src/gamelogic/ -name '*.c' | sort | xgettext --from-code=UTF-8 -j -o messages_game.pot -k_ -kN_ -kP_:1,2 -k -f -
 

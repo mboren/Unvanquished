@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MAX_TEAMS 4 // keep in sync with src/engine/client/keys.h"
 
 #ifdef CGAME
-#include "../cgame/cg_local.h"
+#include "../client-game/cg_local.h"
 #elif defined UI
 #include "ui_local.h"
 #else

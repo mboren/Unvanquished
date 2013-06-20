@@ -36,7 +36,7 @@ Maryland 20850 USA.
 #define G_LOCAL_H_
 
 #include "../../engine/qcommon/q_shared.h"
-#include "bg_public.h"
+#include "../game/bg_public.h"
 #include "../../engine/server/g_api.h"
 
 typedef struct gentity_s gentity_t;

@@ -34,12 +34,23 @@ extern "C" {
 #include "../sys/sys_loadlib.h"
 #include <stdint.h>
 #include <ctype.h>
-#include <llvm/Module.h>
+
+#include <llvm/Config/llvm-config.h>
+
+//Some header files moved in LLVM 3.3
+#if LLVM_VERSION_MAJOR >= 3 && LLVM_VERSION_MINOR >= 3
+#include <llvm/IR/DataLayout.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/Module.h>
+#else
+#include <llvm/DataLayout.h>
 #include <llvm/LLVMContext.h>
+#include <llvm/Module.h>
+#endif
+
 #include <llvm/Support/MemoryBuffer.h>
 #include <llvm/Bitcode/ReaderWriter.h>
 #include <llvm/PassManager.h>
-#include <llvm/DataLayout.h>
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/Transforms/IPO.h>
 #include <llvm/ExecutionEngine/ExecutionEngine.h>

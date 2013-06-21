@@ -57,6 +57,7 @@ extern "C" {
 #include <llvm/ExecutionEngine/JIT.h>
 #include <llvm/Transforms/IPO/PassManagerBuilder.h>
 
+cvar_t* vm_lazy_compilation;
 
 using namespace llvm;
 
@@ -107,6 +108,8 @@ static void *VM_LookupSym( const std::string& symbol )
 
 	// this is about to crash and burn, so report the symbol
 	Com_Printf( "LLVM VM_LookupSym: ^3Unparsed symbol %s^7\n", symbol.c_str() );
+
+	//Abort the JIT
 	return NULL;
 }
 
@@ -145,7 +148,9 @@ void *VM_LoadLLVM( vm_t *vm, intptr_t (*systemcalls)(intptr_t, ...) ) {
 		return NULL;
 	}
 
+	//First time we run the function
 	if ( !engine ) {
+		vm_lazy_compilation = Cvar_Get( "vm_lazyCompilation", "1", CVAR_LATCH | CVAR_ARCHIVE );
 		InitializeNativeTarget();
 
 		std::string str;
@@ -160,8 +165,13 @@ void *VM_LoadLLVM( vm_t *vm, intptr_t (*systemcalls)(intptr_t, ...) ) {
 			Com_Printf( "Couldn't create ExecutionEngine: %s\n", str.c_str());
 			return NULL;
 		}
+
+		if(vm_lazy_compilation->integer)
+		{
+			engine->DisableLazyCompilation( false );
+		}
+
 		engine->DisableSymbolSearching();
-		//engine->DisableLazyCompilation( false );
 		engine->InstallLazyFunctionCreator( VM_LookupSym );
 	} else {
 		engine->addModule( module );

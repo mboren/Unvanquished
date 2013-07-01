@@ -350,6 +350,9 @@ extern "C" {
 		uint32_t                  occlusionQuerySamples;
 		link_t                    multiQuery; // CHC++: list of all nodes that are used by the same occlusion query
 
+		int                       restrictInteractionFirst;
+		int                       restrictInteractionLast;
+
 		frustum_t                 frustum;
 		vec4_t                    localFrustum[ 6 ];
 		struct VBO_s              *frustumVBO;
@@ -442,10 +445,10 @@ extern "C" {
 	  IF_NORMALMAP = BIT( 3 ),
 	  IF_RGBA16F = BIT( 4 ),
 	  IF_RGBA32F = BIT( 5 ),
-	  IF_LA16F = BIT( 6 ),
-	  IF_LA32F = BIT( 7 ),
-	  IF_ALPHA16F = BIT( 8 ),
-	  IF_ALPHA32F = BIT( 9 ),
+	  IF_TWOCOMP16F = BIT( 6 ),
+	  IF_TWOCOMP32F = BIT( 7 ),
+	  IF_ONECOMP16F = BIT( 8 ),
+	  IF_ONECOMP32F = BIT( 9 ),
 	  IF_DEPTH16 = BIT( 10 ),
 	  IF_DEPTH24 = BIT( 11 ),
 	  IF_DEPTH32 = BIT( 12 ),
@@ -3003,6 +3006,7 @@ extern "C" {
 	extern cvar_t *r_ext_vertex_array_object;
 	extern cvar_t *r_ext_half_float_pixel;
 	extern cvar_t *r_ext_texture_float;
+	extern cvar_t *r_ext_texture_rg;
 	extern cvar_t *r_ext_stencil_wrap;
 	extern cvar_t *r_ext_texture_filter_anisotropic;
 	extern cvar_t *r_ext_stencil_two_side;
@@ -3227,7 +3231,7 @@ extern "C" {
 	void           R_RenderView( viewParms_t *parms );
 
 	void           R_AddMDVSurfaces( trRefEntity_t *e );
-	void           R_AddMDVInteractions( trRefEntity_t *e, trRefLight_t *light );
+	void           R_AddMDVInteractions( trRefEntity_t *e, trRefLight_t *light, interactionType_t iaType );
 
 	void           R_AddPolygonSurfaces( void );
 	void           R_AddPolygonBufferSurfaces( void );
@@ -3624,7 +3628,7 @@ extern "C" {
 	============================================================
 	*/
 
-	void     R_AddBrushModelInteractions( trRefEntity_t *ent, trRefLight_t *light );
+	void     R_AddBrushModelInteractions( trRefEntity_t *ent, trRefLight_t *light, interactionType_t iaType );
 	void     R_SetupEntityLighting( const trRefdef_t *refdef, trRefEntity_t *ent, vec3_t forcedOrigin );
 	int      R_LightForPoint( vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir );
 	void     R_TessLight( const trRefLight_t *light, const vec4_t color );
@@ -3844,7 +3848,7 @@ extern "C" {
 	void            R_AnimationList_f( void );
 
 	void            R_AddMD5Surfaces( trRefEntity_t *ent );
-	void            R_AddMD5Interactions( trRefEntity_t *ent, trRefLight_t *light );
+	void            R_AddMD5Interactions( trRefEntity_t *ent, trRefLight_t *light, interactionType_t iaType );
 
 #if defined( USE_REFENTITY_ANIMATIONSYSTEM )
 	int             RE_CheckSkeleton( refSkeleton_t *skel, qhandle_t hModel, qhandle_t hAnim );
@@ -3880,7 +3884,7 @@ extern "C" {
 	*/
 
 	void R_MDM_AddAnimSurfaces( trRefEntity_t *ent );
-	void R_AddMDMInteractions( trRefEntity_t *e, trRefLight_t *light );
+	void R_AddMDMInteractions( trRefEntity_t *e, trRefLight_t *light, interactionType_t iaType );
 
 	int  R_MDM_GetBoneTag( orientation_t *outTag, mdmModel_t *mdm, int startTagIndex, const refEntity_t *refent,
 	                       const char *tagName );

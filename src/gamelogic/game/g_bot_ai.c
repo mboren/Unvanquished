@@ -987,6 +987,24 @@ AINodeStatus_t BotActionHeal( gentity_t *self, AIGenericNode_t *node )
 AINodeStatus_t BotActionEvolve ( gentity_t *self, AIGenericNode_t *node )
 {
 	AINodeStatus_t status = STATUS_FAILURE;
+
+	if ( g_bot_infinite_granger.integer )
+	{
+		// Only try to evolve to granger or advanced granger
+		if ( BotEvolveToClass( self, PCL_ALIEN_BUILDER0_UPG ) )
+		{
+			return STATUS_SUCCESS;
+		}
+		else if ( BotEvolveToClass( self, PCL_ALIEN_BUILDER0 ) )
+		{
+			return STATUS_SUCCESS;
+		}
+		else
+		{
+			return STATUS_FAILURE;
+		}
+	}
+
 	if ( !g_bot_evolve.integer )
 	{
 		return status;

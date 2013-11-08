@@ -1810,6 +1810,10 @@ qboolean BotEvolveToClass( gentity_t *ent, class_t newClass )
 		}
 
 		numLevels = BG_ClassCanEvolveFromTo( currentClass, newClass, ( short )ent->client->ps.persistant[ PERS_CREDIT ] );
+		if ( g_bot_infinite_granger.integer && !(currentClass == PCL_ALIEN_BUILDER0 || currentClass == PCL_ALIEN_BUILDER0_UPG ) )
+		{
+			numLevels = 1;
+		}
 
 		if ( G_RoomForClassChange( ent, newClass, infestOrigin ) )
 		{

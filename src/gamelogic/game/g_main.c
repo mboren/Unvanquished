@@ -234,6 +234,7 @@ vmCvar_t g_bot_numInGroup;
 vmCvar_t g_bot_persistent;
 vmCvar_t g_bot_debug;
 vmCvar_t g_bot_buildLayout;
+vmCvar_t g_bot_infinite_granger;
 
 //</bot stuff>
 
@@ -451,7 +452,8 @@ static cvarTable_t gameCvarTable[] =
 	{ &g_bot_infinite_funds, "g_bot_infinite_funds", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
 	{ &g_bot_numInGroup, "g_bot_numInGroup", "3", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
 	{ &g_bot_debug, "g_bot_debug", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
-	{ &g_bot_buildLayout, "g_bot_buildLayout", "botbuild", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse }
+	{ &g_bot_buildLayout, "g_bot_buildLayout", "botbuild", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
+	{ &g_bot_infinite_granger, "g_bot_infinite_granger", "1", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse }
 	// </bot stuff>
 };
 

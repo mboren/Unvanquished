@@ -215,5 +215,6 @@ extern vmCvar_t g_bot_numInGroup;
 extern vmCvar_t g_bot_persistent;
 extern vmCvar_t g_bot_buildLayout;
 extern vmCvar_t g_bot_debug;
+extern vmCvar_t g_bot_infinite_granger;
 
 #endif // G_EXTERN_H_
